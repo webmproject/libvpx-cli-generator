@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>libvpx cli generator</title>
@@ -38,6 +39,18 @@
       }
 
       #cmd {
+        background-color:black;
+        padding-top:10px;
+        padding-bottom:10px;
+        padding-left:5px;
+        margin-bottom: 10px;
+      }
+
+      #cmd-copy {
+        margin-right: 20px;
+      }
+
+      #cmd-line {
         font-size:12pt;
         font-family:monospace;
         color:white;
@@ -46,12 +59,10 @@
     </style>
   </head>
   <body>
-    
-
     <div id="panel">
-      <div style="background-color:black;padding-top:10px;padding-bottom:10px;padding-left:5px">
-        <button id="cmd-copy">Copy</button>
-        <span id="cmd" style="visibility:hidden">
+      <div id="cmd" style="visibility:hidden">
+        <button style="float:left" id="cmd-copy">Copy</button>
+        <div style="float:clear" id="cmd-line">
           <span>vpxenc --codec=vp9</span>
           <span rv-class-selected="ui.debug_inside" rv-show="model.debug">--debug</span>
           <span rv-class-selected="ui.verbose_inside" rv-show="model.verbose">--verbose</span>
@@ -62,7 +73,8 @@
           <span id="target-bitrate" rv-class-selected="ui.target_bitrate_inside" rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</span>
           <span rv-class-selected="ui.cq_level_inside" rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</span>
           <span rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></span>
-          <span rv-class-selected="ui.min_max_q_inside" rv-show="model.min_max_q">--min-q={model.min_q} --max-q={model.max_q}</span>
+          <span rv-class-selected="ui.min_q_inside" rv-show="model.enable_min_q">--min-q={model.min_q}</span>
+          <span rv-class-selected="ui.max_q_inside" rv-show="model.enable_max_q">--max-q={model.max_q}</span>
           <span rv-class-selected="ui.auto_alt_ref_inside" rv-show="model.auto_alt_ref">--auto-alt-ref=1</span>
           <span rv-class-selected="ui.auto_alt_ref_inside" rv-hide="model.auto_alt_ref">--auto-alt-ref=0</span>
           <span rv-class-selected="ui.tiles_inside" rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</span>
@@ -70,14 +82,14 @@
           <span>input.y4m</span>
           <span rv-show="model.ivf">--ivf -o output.ivf</span>
           <span rv-hide="model.ivf">-o output.webm</span>
-        </span>
+        </div>
       </div>
 
       <div class="section" rv-inside="ui.passes_inside">
         <div class="title">Passes</div>
         <div class="body">
-          <label><input type="radio" name="passes" value="1" rv-checked="model.passes">One</input></label><br/>
-          <label><input type="radio" name="passes" value="2" rv-checked="model.passes">Two</input></label><br/>
+          <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>Single</label><br/>
+          <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Multi</label><br/>
         </div>
       </div>
 
@@ -87,25 +99,25 @@
           <label><input type="radio" 
                         name="end-usage" 
                         value="vbr" 
-                        rv-checked="model.end_usage">VBR (Variable Bitrate)</input>
+                        rv-checked="model.end_usage"/>VBR (Variable Bitrate)
           </label><br/>
 
           <label><input type="radio" 
                         name="end-usage" 
                         value="cbr" 
-                        rv-checked="model.end_usage">CBR (Constant Bitrate)</input>
+                        rv-checked="model.end_usage"/>CBR (Constant Bitrate)
           </label><br/>
 
           <label><input type="radio" 
                         name="end-usage" 
                         value="cq"  
-                        rv-checked="model.end_usage">CQ (Constained Quality)</input>
+                        rv-checked="model.end_usage"/>CQ (Constained Quality)
           </label><br/>
 
           <label><input type="radio" 
                         name="end-usage" 
                         value="q"   
-                        rv-checked="model.end_usage">Q (Constant Quality)</input>
+                        rv-checked="model.end_usage"/>Q (Constant Quality)
           </label><br/>
         </div>
       </div>
@@ -113,10 +125,10 @@
       <div class="section" rv-inside="ui.speed_inside">
         <div class="title">Speed</div>
         <div class="body">
-          <label><input type="radio" name="quality" value="rt" rv-checked="model.quality">Real Time</input></label>
-          <label><input type="radio" name="quality" value="good" rv-checked="model.quality">Good</input></label>
-          <label><input type="radio" name="quality" value="best" rv-checked="model.quality">Best</input></label><br/>
-          <input type="range" min="0" max="10" rv-input="model.speed" rv-enabled="model.quality | in rt good"><span rv-text="model.speed"></span>
+          <label><input type="radio" name="quality" value="rt" rv-checked="model.quality"/>Real Time</label>
+          <label><input type="radio" name="quality" value="good" rv-checked="model.quality"/>Good</label>
+          <label><input type="radio" name="quality" value="best" rv-checked="model.quality"/>Best</label><br/>
+          <input type="range" min="0" max="10" rv-input="model.speed" rv-enabled="model.quality | in rt good"/><span rv-text="model.speed"></span>
         </div>
       </div>
 
@@ -127,28 +139,41 @@
         </div>
       </div>
 
-      <div class="section" rv-show="model.end_usage | in cq q" rv-inside="ui.cq_level_inside">
-        <div class="title">Quantization Level</div>
+      <div class="section">
+        <div class="title">Quantization</div>
         <div class="body">
-          <input type="range" min="0" max="63" rv-input="model.cq_level"/>
-          <span rv-text="model.cq_level"></span><br/>
+          <div rv-inside="ui.cq_level_inside">
+            <label>Main Quantizer<input type="range" min="0" max="63" rv-input="model.cq_level" rv-enabled="model.end_usage | in cq q"/></label><span rv-text="model.cq_level"></span><br/>
+          </div>
+
+          <div rv-inside="ui.min_q_inside">
+            <label><input type="checkbox" rv-checked="model.enable_min_q"/>Min Quantizer</label>
+            <input type="range" min="0" max="63" rv-enabled="model.enable_min_q" rv-input="model.min_q"/>
+            <span rv-text="model.min_q"></span>
+          </div>
+
+          <div rv-inside="ui.max_q_inside">
+            <label><input type="checkbox" rv-checked="model.enable_max_q"/>Max Quantizer</label>
+            <input type="range" min="0" max="63" rv-enabled="model.enable_max_q" rv-input="model.max_q"/>
+            <span rv-text="model.max_q"></span>
+          </div>
         </div>
       </div>
 
       <div class="section" rv-inside="ui.aq_inside">
         <div class="title">Adaptive Quantization</div>
         <div class="body">
-          <label><input type="radio" name="aq" value="0" rv-checked="model.aq">Off</input></label><br/>
-          <label><input type="radio" name="aq" value="1" rv-checked="model.aq">Variance</input></label><br/>
-          <label><input type="radio" name="aq" value="2" rv-checked="model.aq">Complexity</input></label><br/>
-          <label><input type="radio" name="aq" value="3" rv-checked="model.aq">Cyclic refresh</input></label>
+          <label><input type="radio" name="aq" value="0" rv-checked="model.aq"/>Off</label><br/>
+          <label><input type="radio" name="aq" value="1" rv-checked="model.aq"/>Variance</label><br/>
+          <label><input type="radio" name="aq" value="2" rv-checked="model.aq"/>Complexity</label><br/>
+          <label><input type="radio" name="aq" value="3" rv-checked="model.aq"/>Cyclic refresh</label>
         </div>
       </div>
 
       <div class="section" rv-inside="ui.tiles_inside">
         <div class="title">Tiles</div>
         <div class="body">
-          <label><input type="checkbox" rv-checked="model.tiles">Enable</label>
+          <label><input type="checkbox" rv-checked="model.tiles"/>Enable</label>
             <select rv-value="model.tile_rows" rv-enabled="model.tiles">
               <option value="0">1</option>
               <option value="1">2</option>
@@ -166,22 +191,10 @@
         </div> 
       </div>
 
-      <div class="section" rv-inside="ui.min_max_q_inside">
-        <div class="title">Min/Max Quantization Levels</div>
-        <div class="body">
-          <label><input type="checkbox" rv-checked="model.min_max_q">Enable</label><br/ >
-          <div class="indent">
-            <label>Min quantizer <input type="range" min="0" max="63" rv-enabled="model.min_max_q" rv-input="model.min_q"></label>
-            <span></span><br/>
-            <label>Max quantizer <input type="range" min="0" max="63" rv-enabled="model.min_max_q" rv-input="model.max_q"></label>
-          </div>
-        </div>
-      </div>
-
       <div class="section" rv-inside="ui.auto_alt_ref_inside">
         <div class="title">Alt Reference Frames</div>
         <div class="body">
-          <label><input type="checkbox" rv-checked="model.auto_alt_ref">Enable</label>
+          <label><input type="checkbox" rv-checked="model.auto_alt_ref"/>Enable</label>
         </div>
       </div>
 
@@ -189,19 +202,19 @@
         <div class="title">Miscellaneous</div>
         <div class="body">
           <label rv-inside="ui.debug_inside">
-            <input type="checkbox" rv-checked="model.debug">Debug mode
+            <input type="checkbox" rv-checked="model.debug"/>Debug mode
           </label><br/>
           <label rv-inside="ui.verbose_inside">
-            <input type="checkbox" rv-checked="model.verbose">Show encoder paramters
+            <input type="checkbox" rv-checked="model.verbose"/>Show encoder paramters
           </label><br/>
           <label rv-inside="ui.psnr_inside">
-            <input type="checkbox" rv-checked="model.psnr">Show PSNR in status line
+            <input type="checkbox" rv-checked="model.psnr"/>Show PSNR in status line
           </label><br/>
           <label rv-inside="ui.quiet_inside">
-            <input type="checkbox" rv-checked="model.quiet">Do not print encode progress
+            <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
           </label><br/>
           <label>
-            <input type="checkbox" rv-checked="model.ivf">Output IVF file
+            <input type="checkbox" rv-checked="model.ivf"/>Output IVF file
           </label><br/>
         </div>
       </div>
@@ -225,7 +238,8 @@
         verbose_inside: false,
         psnr_inside: false,
         quiet_inside: false,
-        min_max_q_inside: false,
+        min_q_inside: false,
+        max_q_inside: false,
         auto_alt_ref_inside: false,
       };
 
@@ -246,7 +260,8 @@
                tile_rows: 0,
                tile_cols: 0,
                auto_alt_ref: 1,
-               min_max_q: false,
+               enable_min_q: false,
+               enable_max_q: false,
                min_q: 0,
                max_q: 63
              };
@@ -275,14 +290,14 @@
       };
 
       rivets.binders.input = {
-          publishes: true,
-          routine: rivets.binders.value.routine,
-          bind: function (el) {
-            el.addEventListener('input', this.publish);
-          },
-          unbind: function (el) {
-            el.removeEventListener('input', this.publish);
-          }
+        publishes: true,
+        routine: rivets.binders.value.routine,
+        bind: function (el) {
+          $(el).on('input change', this.publish);
+        },
+        unbind: function (el) {
+          $(el).off('input change', this.publish);
+        }
       };
 
       rivets.formatters.eq = function (value, args) {
@@ -300,6 +315,15 @@
 
       $('#cmd').css('visibility', 'visible');
 
+      var rangeControl = null;
+      $('#panel input[type=range]')
+        .on('mouseenter', function(event){
+          rangeControl = $(event.target);
+        })
+        .on('mouseleave', function(event ){
+          rangeControl = null;
+        });
+
       var control = null;
 
       $('#target-bitrate')
@@ -312,6 +336,21 @@
         });
 
       $(document).on('keydown', function(event) {
+        if (rangeControl) {
+          var val = parseInt(rangeControl.val());
+          if (event.keyCode === 38) {
+            var newVal = val + 1;
+            console.log('!', newVal);
+            rangeControl.val(newVal).trigger('change');
+            event.preventDefault();
+          } else if (event.keyCode === 40) {
+            var newVal = val - 1;
+            console.log('!', newVal);
+            rangeControl.val(newVal).trigger('change');
+            event.preventDefault();
+          }
+        }
+
         if (control) {
           var delta = (event.ctrlKey && event.shiftKey) ? 1000 : (event.shiftKey ? 100 : 10);
 
