@@ -9,6 +9,10 @@
         border: 0;
       }
 
+      input {
+        vertical-align:middle;
+      }
+
       input[type='radio'] {
         cursor: pointer; 
       }
@@ -36,6 +40,10 @@
 
       .indent {
         margin-left: 10px;
+      }
+
+      .value {
+        font-size: 8pt;
       }
 
       #cmd {
@@ -73,6 +81,8 @@
           <span id="target-bitrate" rv-class-selected="ui.target_bitrate_inside" rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</span>
           <span rv-class-selected="ui.cq_level_inside" rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</span>
           <span rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></span>
+          <span rv-class-selected="ui.kf_min_dist_inside" rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</span>
+          <span rv-class-selected="ui.kf_max_dist_inside" rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</span>
           <span rv-class-selected="ui.min_q_inside" rv-show="model.enable_min_q">--min-q={model.min_q}</span>
           <span rv-class-selected="ui.max_q_inside" rv-show="model.enable_max_q">--max-q={model.max_q}</span>
           <span rv-class-selected="ui.auto_alt_ref_inside" rv-show="model.auto_alt_ref">--auto-alt-ref=1</span>
@@ -128,14 +138,15 @@
           <label><input type="radio" name="quality" value="rt" rv-checked="model.quality"/>Real Time</label>
           <label><input type="radio" name="quality" value="good" rv-checked="model.quality"/>Good</label>
           <label><input type="radio" name="quality" value="best" rv-checked="model.quality"/>Best</label><br/>
-          <input type="range" min="0" max="10" rv-input="model.speed" rv-enabled="model.quality | in rt good"/><span rv-text="model.speed"></span>
+          <input type="range" min="0" max="10" rv-input="model.speed" rv-enabled="model.quality | in rt good"/>
+          <span class="value" rv-text="model.speed"></span>
         </div>
       </div>
 
-      <div class="section" rv-show="model.end_usage | in vbr cbr cq" rv-inside="ui.target_bitrate_inside">
-        <div class="title">Target Bitrate</div> 
-        <div class="body">
-          <input type="text" rv-value="model.target_bitrate"/> kbps<br/>
+      <div class="section">
+        <div class="title">Bitrate</div> 
+        <div class="body" rv-inside="ui.target_bitrate_inside">
+          <input type="text" rv-value="model.target_bitrate" rv-enabled="model.end_usage | in vbr cbr cq"/> kbps<br/>
         </div>
       </div>
 
@@ -143,26 +154,27 @@
         <div class="title">Quantization</div>
         <div class="body">
           <div rv-inside="ui.cq_level_inside">
-            <label>Main Quantizer<input type="range" min="0" max="63" rv-input="model.cq_level" rv-enabled="model.end_usage | in cq q"/></label><span rv-text="model.cq_level"></span><br/>
+            <label>Main Quantizer<input type="range" min="0" max="63" rv-input="model.cq_level" rv-enabled="model.end_usage | in cq q"/></label>
+            <span class="value" rv-text="model.cq_level"></span>
           </div>
 
           <div rv-inside="ui.min_q_inside">
             <label><input type="checkbox" rv-checked="model.enable_min_q"/>Min Quantizer</label>
             <input type="range" min="0" max="63" rv-enabled="model.enable_min_q" rv-input="model.min_q"/>
-            <span rv-text="model.min_q"></span>
+            <span class="value" rv-text="model.min_q"></span>
           </div>
 
           <div rv-inside="ui.max_q_inside">
             <label><input type="checkbox" rv-checked="model.enable_max_q"/>Max Quantizer</label>
             <input type="range" min="0" max="63" rv-enabled="model.enable_max_q" rv-input="model.max_q"/>
-            <span rv-text="model.max_q"></span>
+            <span class="value" rv-text="model.max_q"></span>
           </div>
         </div>
       </div>
 
-      <div class="section" rv-inside="ui.aq_inside">
+      <div class="section">
         <div class="title">Adaptive Quantization</div>
-        <div class="body">
+        <div class="body" rv-inside="ui.aq_inside">
           <label><input type="radio" name="aq" value="0" rv-checked="model.aq"/>Off</label><br/>
           <label><input type="radio" name="aq" value="1" rv-checked="model.aq"/>Variance</label><br/>
           <label><input type="radio" name="aq" value="2" rv-checked="model.aq"/>Complexity</label><br/>
@@ -170,9 +182,9 @@
         </div>
       </div>
 
-      <div class="section" rv-inside="ui.tiles_inside">
+      <div class="section">
         <div class="title">Tiles</div>
-        <div class="body">
+        <div class="body" rv-inside="ui.tiles_inside">
           <label><input type="checkbox" rv-checked="model.tiles"/>Enable</label>
             <select rv-value="model.tile_rows" rv-enabled="model.tiles">
               <option value="0">1</option>
@@ -191,9 +203,23 @@
         </div> 
       </div>
 
-      <div class="section" rv-inside="ui.auto_alt_ref_inside">
-        <div class="title">Alt Reference Frames</div>
+      <div class="section">
+        <div class="title">Key Frames</div>
         <div class="body">
+          <div rv-inside="ui.kf_min_dist_inside">
+            <label><input type="checkbox" rv-checked="model.enable_kf_min_dist"/>Min Distance</label>
+            <input type="text" rv-enabled="model.enable_kf_min_dist" rv-input="model.kf_min_dist"/>frames
+          </div>
+          <div rv-inside="ui.kf_max_dist_inside">
+            <label><input type="checkbox" rv-checked="model.enable_kf_max_dist"/>Max Distance</label>
+            <input type="text" rv-enabled="model.enable_kf_max_dist" rv-input="model.kf_max_dist"/>frames
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="title">Alt Reference Frames</div>
+        <div class="body" rv-inside="ui.auto_alt_ref_inside">
           <label><input type="checkbox" rv-checked="model.auto_alt_ref"/>Enable</label>
         </div>
       </div>
@@ -240,6 +266,8 @@
         quiet_inside: false,
         min_q_inside: false,
         max_q_inside: false,
+        kf_min_dist_inside: false,
+        kf_max_dist_inside: false,
         auto_alt_ref_inside: false,
       };
 
@@ -260,6 +288,10 @@
                tile_rows: 0,
                tile_cols: 0,
                auto_alt_ref: 1,
+               enable_kf_min_dist: false,
+               enable_kf_max_dist: false,
+               kf_min_dist: 0,
+               kf_max_dist: 9999,
                enable_min_q: false,
                enable_max_q: false,
                min_q: 0,
@@ -339,14 +371,10 @@
         if (rangeControl) {
           var val = parseInt(rangeControl.val());
           if (event.keyCode === 38) {
-            var newVal = val + 1;
-            console.log('!', newVal);
-            rangeControl.val(newVal).trigger('change');
+            rangeControl.val(val + 1).trigger('change');
             event.preventDefault();
           } else if (event.keyCode === 40) {
-            var newVal = val - 1;
-            console.log('!', newVal);
-            rangeControl.val(newVal).trigger('change');
+            rangeControl.val(val - 1).trigger('change');
             event.preventDefault();
           }
         }
@@ -366,6 +394,13 @@
 
 
       $(document).on('mousewheel', function(event) {
+        if (rangeControl) {
+          var delta = event.originalEvent.wheelDelta > 0 ? 1 : -1;
+          var val = parseInt(rangeControl.val());
+          rangeControl.val(val + delta).trigger('change');
+          event.preventDefault();
+        }
+
         if (control) {
           var mult = event.originalEvent.wheelDelta > 0 ? 1 : -1;
           var delta = (event.ctrlKey && event.shiftKey) ? 1000 : (event.shiftKey ? 100 : 10);
