@@ -64,6 +64,10 @@
         color:white;
       }
 
+      #panel p {
+        display: inline;
+      }
+
     </style>
   </head>
   <body>
@@ -71,27 +75,27 @@
       <div id="cmd" style="visibility:hidden">
         <button style="float:left" id="cmd-copy">Copy</button>
         <div style="float:clear" id="cmd-line">
-          <span>vpxenc --codec=vp9</span>
-          <span rv-class-selected="ui.debug_inside" rv-show="model.debug">--debug</span>
-          <span rv-class-selected="ui.verbose_inside" rv-show="model.verbose">--verbose</span>
-          <span rv-class-selected="ui.psnr_inside" rv-show="model.psnr">--psnr</span>
-          <span rv-class-selected="ui.quiet_inside" rv-show="model.quiet">--quiet</span>
-          <span rv-class-selected="ui.passes_inside">--passes={model.passes}</span>
-          <span rv-class-selected="ui.end_usage_inside">--end-usage={model.end_usage}</span>
-          <span id="target-bitrate" rv-class-selected="ui.target_bitrate_inside" rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</span>
-          <span rv-class-selected="ui.cq_level_inside" rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</span>
-          <span rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></span>
-          <span rv-class-selected="ui.kf_min_dist_inside" rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</span>
-          <span rv-class-selected="ui.kf_max_dist_inside" rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</span>
-          <span rv-class-selected="ui.min_q_inside" rv-show="model.enable_min_q">--min-q={model.min_q}</span>
-          <span rv-class-selected="ui.max_q_inside" rv-show="model.enable_max_q">--max-q={model.max_q}</span>
-          <span rv-class-selected="ui.auto_alt_ref_inside" rv-show="model.auto_alt_ref">--auto-alt-ref=1</span>
-          <span rv-class-selected="ui.auto_alt_ref_inside" rv-hide="model.auto_alt_ref">--auto-alt-ref=0</span>
-          <span rv-class-selected="ui.tiles_inside" rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</span>
-          <span rv-class-selected="ui.aq_inside" rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</span>
-          <span>input.y4m</span>
-          <span rv-show="model.ivf">--ivf -o output.ivf</span>
-          <span rv-hide="model.ivf">-o output.webm</span>
+          <p>vpxenc --codec=vp9</p>
+          <p rv-class-selected="ui.debug_inside" rv-show="model.debug">--debug</p>
+          <p rv-class-selected="ui.verbose_inside" rv-show="model.verbose">--verbose</p>
+          <p rv-class-selected="ui.psnr_inside" rv-show="model.psnr">--psnr</p>
+          <p rv-class-selected="ui.quiet_inside" rv-show="model.quiet">--quiet</p>
+          <p rv-class-selected="ui.passes_inside">--passes={model.passes}</p>
+          <p rv-class-selected="ui.end_usage_inside">--end-usage={model.end_usage}</p>
+          <p id="target-bitrate" rv-class-selected="ui.target_bitrate_inside" rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</p>
+          <p rv-class-selected="ui.cq_level_inside" rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</p>
+          <p rv-class-selected="ui.speed_inside">--{model.quality} <p rv-show="model.quality | in rt good">--cpu-used={model.speed}</p></p>
+          <p rv-class-selected="ui.kf_min_dist_inside" rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</p>
+          <p rv-class-selected="ui.kf_max_dist_inside" rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</p>
+          <p rv-class-selected="ui.min_q_inside" rv-show="model.enable_min_q">--min-q={model.min_q}</p>
+          <p rv-class-selected="ui.max_q_inside" rv-show="model.enable_max_q">--max-q={model.max_q}</p>
+          <p rv-class-selected="ui.auto_alt_ref_inside" rv-show="model.auto_alt_ref">--auto-alt-ref=1</p>
+          <p rv-class-selected="ui.auto_alt_ref_inside" rv-hide="model.auto_alt_ref">--auto-alt-ref=0</p>
+          <p rv-class-selected="ui.tiles_inside" rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
+          <p rv-class-selected="ui.aq_inside" rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
+          <p>input.y4m</p>
+          <p rv-show="model.ivf">--ivf -o output.ivf</p>
+          <p rv-hide="model.ivf">-o output.webm</p>
         </div>
       </div>
 
@@ -281,7 +285,7 @@
                end_usage: 'vbr', 
                quality: 'good', 
                speed: 1, 
-               target_bitrate: 600, 
+               target_bitrate: 600,
                cq_level: 10,
                aq: 0,
                tiles: false,
@@ -340,10 +344,27 @@
         return $.inArray(value, arguments, 1) !== -1;
       };
 
-      rivets.bind($('#panel'), {
+      var view = rivets.bind($('#panel'), {
         model: m,
         ui: ui
       });
+
+      var rangeControl = null
+
+      /*$.each(view.bindings, function(index, binding){
+        var el = binding.el;
+        if (el.nodeName === "INPUT" && el.type === "range") {
+          $(el)
+            .on('mouseenter', function(event) {
+              rangeControl = $(event.target);
+            })
+            .on('mouseleave', function(event ) {
+              rangeControl = null;
+            });
+        }
+      });*/
+
+
 
       $('#cmd').css('visibility', 'visible');
 
@@ -358,14 +379,14 @@
 
       var control = null;
 
-      $('#target-bitrate')
+      /*$('#target-bitrate')
         .on('mouseenter', function(event) {
           console.log(event.target);
           control = event.target; 
         })
         .on('mouseleave', function (event) {
           control = null;
-        });
+        });*/
 
       $(document).on('keydown', function(event) {
         if (rangeControl) {
@@ -412,7 +433,7 @@
       var client = new ZeroClipboard($('#cmd-copy'));
       client.on('copy', function(event) {
         //var cmd = $('#cmd').children(":visible").text(); //.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").trim();
-        var cmd = $('#cmd').children(":visible").map(function(){ return $(this).text() }).get().join(' ').replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").trim();
+        var cmd = $('#cmd-line').children(":visible").map(function(){ return $(this).text() }).get().join(' ').replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").trim();
         console.log(cmd);
         var clipboard = event.clipboardData;
         clipboard.setData("text/plain", cmd);
