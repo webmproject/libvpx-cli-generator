@@ -68,6 +68,10 @@
         display: inline;
       }
 
+      [rv-on-click]:not([rv-on-click=""]) {
+        cursor: pointer;
+      }
+
     </style>
   </head>
   <body>
@@ -76,23 +80,45 @@
         <button style="float:left" id="cmd-copy">Copy</button>
         <div style="float:clear" id="cmd-line">
           <p>vpxenc --codec=vp9</p>
-          <p rv-class-selected="ui.debug_inside" rv-show="model.debug">--debug</p>
-          <p rv-class-selected="ui.verbose_inside" rv-show="model.verbose">--verbose</p>
-          <p rv-class-selected="ui.psnr_inside" rv-show="model.psnr">--psnr</p>
-          <p rv-class-selected="ui.quiet_inside" rv-show="model.quiet">--quiet</p>
-          <p rv-class-selected="ui.passes_inside">--passes={model.passes}</p>
-          <p rv-class-selected="ui.end_usage_inside">--end-usage={model.end_usage}</p>
-          <p id="target-bitrate" rv-class-selected="ui.target_bitrate_inside" rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</p>
-          <p rv-class-selected="ui.cq_level_inside" rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</p>
-          <p rv-class-selected="ui.speed_inside">--{model.quality} <p rv-show="model.quality | in rt good">--cpu-used={model.speed}</p></p>
-          <p rv-class-selected="ui.kf_min_dist_inside" rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</p>
-          <p rv-class-selected="ui.kf_max_dist_inside" rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</p>
-          <p rv-class-selected="ui.min_q_inside" rv-show="model.enable_min_q">--min-q={model.min_q}</p>
-          <p rv-class-selected="ui.max_q_inside" rv-show="model.enable_max_q">--max-q={model.max_q}</p>
-          <p rv-class-selected="ui.auto_alt_ref_inside" rv-show="model.auto_alt_ref">--auto-alt-ref=1</p>
-          <p rv-class-selected="ui.auto_alt_ref_inside" rv-hide="model.auto_alt_ref">--auto-alt-ref=0</p>
-          <p rv-class-selected="ui.tiles_inside" rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
-          <p rv-class-selected="ui.aq_inside" rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
+          <p rv-class-selected="ui.debug_inside"
+             rv-show="model.debug">--debug</p>
+          <p rv-class-selected="ui.verbose_inside"
+             rv-show="model.verbose">--verbose</p>
+          <p rv-class-selected="ui.psnr_inside"
+             rv-show="model.psnr">--psnr</p>
+          <p rv-class-selected="ui.quiet_inside"
+             rv-show="model.quiet">--quiet</p>
+          <p rv-on-click="model.passes_cycle"
+             rv-class-selected="ui.passes_inside"
+             rv-inside="ui.passes_inside">--passes={model.passes}</p>
+          <p rv-on-click="model.end_usage_cycle"
+             rv-class-selected="ui.end_usage_inside"
+             rv-inside="ui.end_usage_inside">--end-usage={model.end_usage}</p>
+          <p id="target-bitrate"
+             rv-class-selected="ui.target_bitrate_inside"
+             rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</p>
+          <p rv-class-selected="ui.cq_level_inside"
+             rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</p>
+          <p rv-on-click="model.quality_cycle"
+             rv-inside="ui.speed_inside"
+             rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span>
+          </p>
+          <p rv-class-selected="ui.kf_min_dist_inside"
+             rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</p>
+          <p rv-class-selected="ui.kf_max_dist_inside"
+             rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</p>
+          <p rv-class-selected="ui.min_q_inside"
+             rv-show="model.enable_min_q">--min-q={model.min_q}</p>
+          <p rv-class-selected="ui.max_q_inside"
+             rv-show="model.enable_max_q">--max-q={model.max_q}</p>
+          <p rv-class-selected="ui.auto_alt_ref_inside"
+             rv-show="model.auto_alt_ref">--auto-alt-ref=1</p>
+          <p rv-class-selected="ui.auto_alt_ref_inside"
+             rv-hide="model.auto_alt_ref">--auto-alt-ref=0</p>
+          <p rv-class-selected="ui.tiles_inside"
+             rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
+          <p rv-class-selected="ui.aq_inside"
+             rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
           <p>input.y4m</p>
           <p rv-show="model.ivf">--ivf -o output.ivf</p>
           <p rv-hide="model.ivf">-o output.webm</p>
@@ -110,27 +136,27 @@
       <div class="section" rv-inside="ui.end_usage_inside">
         <div class="title">Usage</div>
         <div class="body">
-          <label><input type="radio" 
-                        name="end-usage" 
-                        value="vbr" 
+          <label><input type="radio"
+                        name="end-usage"
+                        value="vbr"
                         rv-checked="model.end_usage"/>VBR (Variable Bitrate)
           </label><br/>
 
-          <label><input type="radio" 
-                        name="end-usage" 
-                        value="cbr" 
+          <label><input type="radio"
+                        name="end-usage"
+                        value="cbr"
                         rv-checked="model.end_usage"/>CBR (Constant Bitrate)
           </label><br/>
 
-          <label><input type="radio" 
-                        name="end-usage" 
-                        value="cq"  
+          <label><input type="radio"
+                        name="end-usage"
+                        value="cq"
                         rv-checked="model.end_usage"/>CQ (Constained Quality)
           </label><br/>
 
-          <label><input type="radio" 
-                        name="end-usage" 
-                        value="q"   
+          <label><input type="radio"
+                        name="end-usage"
+                        value="q"
                         rv-checked="model.end_usage"/>Q (Constant Quality)
           </label><br/>
         </div>
@@ -275,19 +301,29 @@
         auto_alt_ref_inside: false,
       };
 
+      function getParamCycle(param, values) {
+        return function(event, models) {
+          var model = models.model;
+          model[param] = values[($.inArray(model[param], values) + 1) % values.length];
+        };
+      }
+
       var m = {codec:'vp9', 
                debug: false,
                verbose: false,
                psnr: false,
                quet: false,
                ivf: false,
-               passes: 2, 
-               end_usage: 'vbr', 
-               quality: 'good', 
-               speed: 1, 
-               target_bitrate: 600,
-               cq_level: 10,
-               aq: 0,
+               passes: 2,            // 1, 2
+               passes_cycle: getParamCycle('passes', [1, 2]),
+               end_usage: 'vbr',     // 'vbr', 'cbr', 'cq', 'q'
+               end_usage_cycle: getParamCycle('end_usage', ['vbr', 'cbr', 'cq', 'q']),
+               quality: 'good',      // 'rt', 'good', 'best'
+               quality_cycle: getParamCycle('quality', ['rt', 'good', 'best']),
+               speed: 1,             // 1, 2, 3, ..., 10
+               target_bitrate: 600,  // > 0
+               cq_level: 10,         // 0, 1, 2, ..., 63
+               aq: 0,                // 0, 1, 2, 3
                tiles: false,
                tile_rows: 0,
                tile_cols: 0,
