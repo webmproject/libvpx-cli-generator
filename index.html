@@ -80,6 +80,8 @@
         <button style="float:left" id="cmd-copy">Copy</button>
         <div style="float:clear" id="cmd-line">
           <p>vpxenc --codec=vp9</p>
+          <p rv-class-selected="ui.lag_in_frames_inside"
+             rv-show="model.enable_lag_in_frames">--lag-in-frames={model.lag_in_frames}</p>
           <p rv-class-selected="ui.debug_inside"
              rv-show="model.debug">--debug</p>
           <p rv-class-selected="ui.verbose_inside"
@@ -272,6 +274,10 @@
           <label>
             <input type="checkbox" rv-checked="model.ivf"/>Output IVF file
           </label><br/>
+          <div rv-inside="ui.lag_in_frames_inside">
+            <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in frames</label>
+            <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/>frames
+          </div>
         </div>
       </div>
     </div>
@@ -299,6 +305,7 @@
         kf_min_dist_inside: false,
         kf_max_dist_inside: false,
         auto_alt_ref_inside: false,
+        lag_in_frames_inside: false,
       };
 
       function getParamCycle(param, values) {
@@ -335,7 +342,9 @@
                enable_min_q: false,
                enable_max_q: false,
                min_q: 0,
-               max_q: 63
+               max_q: 63,
+               enable_lag_in_frames: false,
+               lag_in_frames: 25
              };
 
       rivets.binders.inside = {
