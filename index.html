@@ -103,8 +103,7 @@
              rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</p>
           <p rv-on-click="model.quality_cycle"
              rv-inside="ui.speed_inside"
-             rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span>
-          </p>
+             rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></p>
           <p rv-class-selected="ui.kf_min_dist_inside"
              rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</p>
           <p rv-class-selected="ui.kf_max_dist_inside"
@@ -121,207 +120,206 @@
              rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
           <p rv-class-selected="ui.aq_inside"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
-          <p rv-show="model.input_format | in i420 i422 i444 yv12">--{model.input_format} --width={model.input_width} --height={model.input_height} {model.input_name}.yuv</p>
-          <p rv-show="model.input_format | in y4m">{model.input_name}.y4m</p>
+          <p rv-class-selected="ui.input_inside"
+             rv-show="model.input_format | in i420 i422 i444 yv12">--{model.input_format} --width={model.input_width} --height={model.input_height} {model.input_name}.yuv</p>
+          <p rv-class-selected="ui.input_inside"
+             rv-show="model.input_format | in y4m">{model.input_name}.y4m</p>
           <p rv-class-selected="ui.output_inside"><span rv-show="model.output_format | eq ivf">--ivf</span> -o {model.output_name}.{model.output_format}</p>
         </div>
       </div>
 
-      <div class="section" rv-inside="ui.passes_inside">
-        <div class="title">Passes</div>
-        <div class="body">
-          <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>Single</label><br/>
-          <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Multi</label><br/>
-        </div>
-      </div>
-
-      <div class="section" rv-inside="ui.end_usage_inside">
-        <div class="title">Usage</div>
-        <div class="body">
-          <label><input type="radio"
-                        name="end-usage"
-                        value="vbr"
-                        rv-checked="model.end_usage"/>VBR (Variable Bitrate)
-          </label><br/>
-
-          <label><input type="radio"
-                        name="end-usage"
-                        value="cbr"
-                        rv-checked="model.end_usage"/>CBR (Constant Bitrate)
-          </label><br/>
-
-          <label><input type="radio"
-                        name="end-usage"
-                        value="cq"
-                        rv-checked="model.end_usage"/>CQ (Constained Quality)
-          </label><br/>
-
-          <label><input type="radio"
-                        name="end-usage"
-                        value="q"
-                        rv-checked="model.end_usage"/>Q (Constant Quality)
-          </label><br/>
-        </div>
-      </div>
-
-      <div class="section" rv-inside="ui.speed_inside">
-        <div class="title">Speed</div>
-        <div class="body">
-          <label><input type="radio" name="quality" value="rt" rv-checked="model.quality"/>Real Time</label>
-          <label><input type="radio" name="quality" value="good" rv-checked="model.quality"/>Good</label>
-          <label><input type="radio" name="quality" value="best" rv-checked="model.quality"/>Best</label><br/>
-          <input type="range" min="0" max="10" rv-input="model.speed" rv-enabled="model.quality | in rt good"/>
-          <span class="value" rv-text="model.speed"></span>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="title">Bitrate</div> 
-        <div class="body" rv-inside="ui.target_bitrate_inside">
-          <input type="text" rv-input="model.target_bitrate" rv-enabled="model.end_usage | in vbr cbr cq"/> kbps<br/>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="title">Quantization</div>
-        <div class="body">
-          <div rv-inside="ui.cq_level_inside">
-            <label>Main Quantizer<input type="range" min="0" max="63" rv-input="model.cq_level" rv-enabled="model.end_usage | in cq q"/></label>
-            <span class="value" rv-text="model.cq_level"></span>
-          </div>
-
-          <div rv-inside="ui.min_q_inside">
-            <label><input type="checkbox" rv-checked="model.enable_min_q"/>Min Quantizer</label>
-            <input type="range" min="0" max="63" rv-enabled="model.enable_min_q" rv-input="model.min_q"/>
-            <span class="value" rv-text="model.min_q"></span>
-          </div>
-
-          <div rv-inside="ui.max_q_inside">
-            <label><input type="checkbox" rv-checked="model.enable_max_q"/>Max Quantizer</label>
-            <input type="range" min="0" max="63" rv-enabled="model.enable_max_q" rv-input="model.max_q"/>
-            <span class="value" rv-text="model.max_q"></span>
+      <div style="float:left">
+        <div class="section" rv-inside="ui.passes_inside">
+          <div class="title">Passes</div>
+          <div class="body">
+            <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>Single</label><br/>
+            <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Multi</label><br/>
           </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="title">Adaptive Quantization</div>
-        <div class="body" rv-inside="ui.aq_inside">
-          <label><input type="radio" name="aq" value="0" rv-checked="model.aq"/>Off</label><br/>
-          <label><input type="radio" name="aq" value="1" rv-checked="model.aq"/>Variance</label><br/>
-          <label><input type="radio" name="aq" value="2" rv-checked="model.aq"/>Complexity</label><br/>
-          <label><input type="radio" name="aq" value="3" rv-checked="model.aq"/>Cyclic refresh</label>
-        </div>
-      </div>
+        <div class="section" rv-inside="ui.end_usage_inside">
+          <div class="title">Usage</div>
+          <div class="body">
+            <label><input type="radio"
+                          name="end-usage"
+                          value="vbr"
+                          rv-checked="model.end_usage"/>VBR (Variable Bitrate)</label><br/>
+            <label><input type="radio"
+                          name="end-usage"
+                          value="cbr"
+                          rv-checked="model.end_usage"/>CBR (Constant Bitrate)</label><br/>
+            <label><input type="radio"
+                          name="end-usage"
+                          value="cq"
+                          rv-checked="model.end_usage"/>CQ (Constained Quality)</label><br/>
 
-      <div class="section">
-        <div class="title">Tiles</div>
-        <div class="body" rv-inside="ui.tiles_inside">
-          <label><input type="checkbox" rv-checked="model.tiles"/>Enable</label>
-            <select rv-value="model.tile_rows" rv-enabled="model.tiles">
-              <option value="0">1</option>
-              <option value="1">2</option>
-              <option value="2">4</option>
-            </select> &times;
-            <select rv-value="model.tile_cols" rv-enabled="model.tiles">
-              <option value="0">1</option>
-              <option value="1">2</option>
-              <option value="2">4</option>
-              <option value="3">8</option>
-              <option value="4">16</option>
-              <option value="5">32</option>
-              <option value="6">64</option>
-            </select>
-        </div> 
-      </div>
-
-      <div class="section">
-        <div class="title">Key Frames</div>
-        <div class="body">
-          <div rv-inside="ui.kf_min_dist_inside">
-            <label><input type="checkbox" rv-checked="model.enable_kf_min_dist"/>Min Distance</label>
-            <input type="text" rv-enabled="model.enable_kf_min_dist" rv-input="model.kf_min_dist"/>frames
-          </div>
-          <div rv-inside="ui.kf_max_dist_inside">
-            <label><input type="checkbox" rv-checked="model.enable_kf_max_dist"/>Max Distance</label>
-            <input type="text" rv-enabled="model.enable_kf_max_dist" rv-input="model.kf_max_dist"/>frames
+            <label><input type="radio"
+                          name="end-usage"
+                          value="q"
+                          rv-checked="model.end_usage"/>Q (Constant Quality)</label><br/>
           </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="title">Alt Reference Frames</div>
-        <div class="body" rv-inside="ui.auto_alt_ref_inside">
-          <label><input type="checkbox" rv-checked="model.auto_alt_ref"/>Enable</label>
+        <div class="section" rv-inside="ui.speed_inside">
+          <div class="title">Speed</div>
+          <div class="body">
+            <label><input type="radio" name="quality" value="rt" rv-checked="model.quality"/>Real Time</label>
+            <label><input type="radio" name="quality" value="good" rv-checked="model.quality"/>Good</label>
+            <label><input type="radio" name="quality" value="best" rv-checked="model.quality"/>Best</label><br/>
+            <input type="range" min="0" max="10" rv-input="model.speed" rv-enabled="model.quality | in rt good"/>
+            <span class="value" rv-text="model.speed"></span>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="title">Bitrate</div> 
+          <div class="body" rv-inside="ui.target_bitrate_inside">
+            <input type="text" rv-input="model.target_bitrate" rv-enabled="model.end_usage | in vbr cbr cq"/> kbps<br/>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="title">Quantization</div>
+          <div class="body">
+            <div rv-inside="ui.cq_level_inside">
+              <label>Main Quantizer<input type="range" min="0" max="63" rv-input="model.cq_level" rv-enabled="model.end_usage | in cq q"/></label>
+              <span class="value" rv-text="model.cq_level"></span>
+            </div>
+
+            <div rv-inside="ui.min_q_inside">
+              <label><input type="checkbox" rv-checked="model.enable_min_q"/>Min Quantizer</label>
+              <input type="range" min="0" max="63" rv-enabled="model.enable_min_q" rv-input="model.min_q"/>
+              <span class="value" rv-text="model.min_q"></span>
+            </div>
+
+            <div rv-inside="ui.max_q_inside">
+              <label><input type="checkbox" rv-checked="model.enable_max_q"/>Max Quantizer</label>
+              <input type="range" min="0" max="63" rv-enabled="model.enable_max_q" rv-input="model.max_q"/>
+              <span class="value" rv-text="model.max_q"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="title">Adaptive Quantization</div>
+          <div class="body" rv-inside="ui.aq_inside">
+            <label><input type="radio" name="aq" value="0" rv-checked="model.aq"/>Off</label><br/>
+            <label><input type="radio" name="aq" value="1" rv-checked="model.aq"/>Variance</label><br/>
+            <label><input type="radio" name="aq" value="2" rv-checked="model.aq"/>Complexity</label><br/>
+            <label><input type="radio" name="aq" value="3" rv-checked="model.aq"/>Cyclic refresh</label>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="title">Tiles</div>
+          <div class="body" rv-inside="ui.tiles_inside">
+            <label><input type="checkbox" rv-checked="model.tiles"/>Enable</label>
+              <select rv-value="model.tile_rows" rv-enabled="model.tiles">
+                <option value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">4</option>
+              </select> &times;
+              <select rv-value="model.tile_cols" rv-enabled="model.tiles">
+                <option value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">4</option>
+                <option value="3">8</option>
+                <option value="4">16</option>
+                <option value="5">32</option>
+                <option value="6">64</option>
+              </select>
+          </div> 
+        </div>
+
+        <div class="section">
+          <div class="title">Key Frames</div>
+          <div class="body">
+            <div rv-inside="ui.kf_min_dist_inside">
+              <label><input type="checkbox" rv-checked="model.enable_kf_min_dist"/>Min Distance</label>
+              <input type="text" rv-enabled="model.enable_kf_min_dist" rv-input="model.kf_min_dist"/>frames
+            </div>
+            <div rv-inside="ui.kf_max_dist_inside">
+              <label><input type="checkbox" rv-checked="model.enable_kf_max_dist"/>Max Distance</label>
+              <input type="text" rv-enabled="model.enable_kf_max_dist" rv-input="model.kf_max_dist"/>frames
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="title">Alt Reference Frames</div>
+          <div class="body" rv-inside="ui.auto_alt_ref_inside">
+            <label><input type="checkbox" rv-checked="model.auto_alt_ref"/>Enable</label>
+          </div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="title">Input</div>
-        <div class="body" rv-inside="ui.input_inside">
-          <label><input type="radio"
-                        name="input_format"
-                        value="y4m"
-                        rv-checked="model.input_format"/>Y4M</label><br/>
-          <label><input type="radio"
-                        name="input_format"
-                        value="i420"
-                        rv-checked="model.input_format"/>YUV 4:2:0</label><br/>
-          <label><input type="radio"
-                        name="input_format"
-                        value="i422"
-                        rv-checked="model.input_format"/>YUV 4:2:2</label><br/>
-          <label><input type="radio"
-                        name="input_format"
-                        value="i444"
-                        rv-checked="model.input_format"/>YUV 4:4:4</label><br/>
-          <label><input type="radio"
-                        name="input_format"
-                        value="yv12"
-                        rv-checked="model.input_format"/>YV12</label><br/>
-          Frame Size <input type="text"
-                            rv-input="model.input_width"
-                            rv-enabled="model.input_format | in i420 i422 i444 yv12"/> &times; 
-                     <input type="text"
-                            rv-input="model.input_height"
-                            rv-enabled="model.input_format | in i420 i422 i444 yv12"/><br/>
-          Filename <input type="text" rv-input="model.input_name"/>
+      <div style="float:left;margin-left:40px">
+        <div class="section">
+          <div class="title">Input</div>
+          <div class="body" rv-inside="ui.input_inside">
+            <label><input type="radio"
+                          name="input_format"
+                          value="y4m"
+                          rv-checked="model.input_format"/>Y4M</label><br/>
+            <label><input type="radio"
+                          name="input_format"
+                          value="i420"
+                          rv-checked="model.input_format"/>YUV 4:2:0</label><br/>
+            <label><input type="radio"
+                          name="input_format"
+                          value="i422"
+                          rv-checked="model.input_format"/>YUV 4:2:2</label><br/>
+            <label><input type="radio"
+                          name="input_format"
+                          value="i444"
+                          rv-checked="model.input_format"/>YUV 4:4:4</label><br/>
+            <label><input type="radio"
+                          name="input_format"
+                          value="yv12"
+                          rv-checked="model.input_format"/>YV12</label><br/>
+            Frame Size <input type="text"
+                              rv-input="model.input_width"
+                              rv-enabled="model.input_format | in i420 i422 i444 yv12"/> &times; 
+                       <input type="text"
+                              rv-input="model.input_height"
+                              rv-enabled="model.input_format | in i420 i422 i444 yv12"/><br/>
+            Filename <input type="text" rv-input="model.input_name"/>
+          </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="title">Output</div>
-        <div class="body" rv-inside="ui.output_inside">
-          <label><input type="radio"
-                        name="output_format"
-                        value="webm"
-                        rv-checked="model.output_format"/>WebM</label><br/>
-          <label><input type="radio"
-                        name="output_format"
-                        value="ivf"
-                        rv-checked="model.output_format"/>IVF</label><br/>
-          Filename <input type="text" rv-input="model.output_name"/>
+        <div class="section">
+          <div class="title">Output</div>
+          <div class="body" rv-inside="ui.output_inside">
+            <label><input type="radio"
+                          name="output_format"
+                          value="webm"
+                          rv-checked="model.output_format"/>WebM</label><br/>
+            <label><input type="radio"
+                          name="output_format"
+                          value="ivf"
+                          rv-checked="model.output_format"/>IVF</label><br/>
+            Filename <input type="text" rv-input="model.output_name"/>
+          </div>
         </div>
-      </div>
-
-      <div class="section">
-        <div class="title">Miscellaneous</div>
-        <div class="body">
-          <label rv-inside="ui.debug_inside">
-            <input type="checkbox" rv-checked="model.debug"/>Debug mode
-          </label><br/>
-          <label rv-inside="ui.verbose_inside">
-            <input type="checkbox" rv-checked="model.verbose"/>Show encoder paramters
-          </label><br/>
-          <label rv-inside="ui.psnr_inside">
-            <input type="checkbox" rv-checked="model.psnr"/>Show PSNR in status line
-          </label><br/>
-          <label rv-inside="ui.quiet_inside">
-            <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
-          </label><br/>
-          <div rv-inside="ui.lag_in_frames_inside">
-            <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in frames</label>
-            <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/>frames
+        <div class="section">
+          <div class="title">Miscellaneous</div>
+          <div class="body">
+            <label rv-inside="ui.debug_inside">
+              <input type="checkbox" rv-checked="model.debug"/>Debug mode
+            </label><br/>
+            <label rv-inside="ui.verbose_inside">
+              <input type="checkbox" rv-checked="model.verbose"/>Show encoder paramters
+            </label><br/>
+            <label rv-inside="ui.psnr_inside">
+              <input type="checkbox" rv-checked="model.psnr"/>Show PSNR in status line
+            </label><br/>
+            <label rv-inside="ui.quiet_inside">
+              <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
+            </label><br/>
+            <div rv-inside="ui.lag_in_frames_inside">
+              <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in frames</label>
+              <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/>frames
+            </div>
           </div>
         </div>
       </div>
