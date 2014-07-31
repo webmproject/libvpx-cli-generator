@@ -96,11 +96,14 @@
           <p rv-on-click="model.end_usage_cycle"
              rv-class-selected="ui.end_usage_inside"
              rv-inside="ui.end_usage_inside">--end-usage={model.end_usage}</p>
-          <p id="target-bitrate"
+          <p data-control-id="target-bitrate"
              rv-class-selected="ui.target_bitrate_inside"
-             rv-show="model.end_usage | in vbr cbr cq">--target-bitrate={model.target_bitrate}</p>
-          <p rv-class-selected="ui.cq_level_inside"
-             rv-show="model.end_usage | in cq q">--cq-level={model.cq_level}</p>
+             rv-show="model.end_usage | in vbr cbr cq"
+             rv-inside="ui.target_bitrate_inside">--target-bitrate={model.target_bitrate}</p>
+          <p data-control-id="cq-level"
+             rv-class-selected="ui.cq_level_inside"
+             rv-show="model.end_usage | in cq q"
+             rv-inside="ui.cq_level_inside">--cq-level={model.cq_level}</p>
           <p rv-on-click="model.quality_cycle"
              rv-inside="ui.speed_inside"
              rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></p>
@@ -108,10 +111,14 @@
              rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</p>
           <p rv-class-selected="ui.kf_max_dist_inside"
              rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</p>
-          <p rv-class-selected="ui.min_q_inside"
-             rv-show="model.enable_min_q">--min-q={model.min_q}</p>
-          <p rv-class-selected="ui.max_q_inside"
-             rv-show="model.enable_max_q">--max-q={model.max_q}</p>
+          <p data-control-id="min-q"
+             rv-class-selected="ui.min_q_inside"
+             rv-show="model.enable_min_q"
+             rv-inside="ui.min_q_inside">--min-q={model.min_q}</p>
+          <p data-control-id="max-q"
+             rv-class-selected="ui.max_q_inside"
+             rv-show="model.enable_max_q"
+             rv-inside="ui.max_q_inside">--max-q={model.max_q}</p>
           <p rv-class-selected="ui.auto_alt_ref_inside"
              rv-show="model.auto_alt_ref">--auto-alt-ref=1</p>
           <p rv-class-selected="ui.auto_alt_ref_inside"
@@ -174,7 +181,7 @@
         <div class="section">
           <div class="title">Bitrate</div> 
           <div class="body" rv-inside="ui.target_bitrate_inside">
-            <input type="text" rv-input="model.target_bitrate" rv-enabled="model.end_usage | in vbr cbr cq"/> kbps<br/>
+            <input id="target-bitrate" type="text" rv-input="model.target_bitrate" rv-enabled="model.end_usage | in vbr cbr cq"/> kbps<br/>
           </div>
         </div>
 
@@ -182,19 +189,30 @@
           <div class="title">Quantization</div>
           <div class="body">
             <div rv-inside="ui.cq_level_inside">
-              <label>Main Quantizer<input type="range" min="0" max="63" rv-input="model.cq_level" rv-enabled="model.end_usage | in cq q"/></label>
+              <label>Main Quantizer<input id="cq-level" type="range"
+                                          min="0" max="63"
+                                          rv-input="model.cq_level" 
+                                          rv-enabled="model.end_usage | in cq q"/></label>
               <span class="value" rv-text="model.cq_level"></span>
             </div>
 
             <div rv-inside="ui.min_q_inside">
-              <label><input type="checkbox" rv-checked="model.enable_min_q"/>Min Quantizer</label>
-              <input type="range" min="0" max="63" rv-enabled="model.enable_min_q" rv-input="model.min_q"/>
+              <label><input type="checkbox" 
+                            rv-checked="model.enable_min_q"/>Min Quantizer</label>
+              <input id="min-q" type="range" 
+                     min="0" max="63" 
+                     rv-enabled="model.enable_min_q" 
+                     rv-input="model.min_q"/>
               <span class="value" rv-text="model.min_q"></span>
             </div>
 
             <div rv-inside="ui.max_q_inside">
-              <label><input type="checkbox" rv-checked="model.enable_max_q"/>Max Quantizer</label>
-              <input type="range" min="0" max="63" rv-enabled="model.enable_max_q" rv-input="model.max_q"/>
+              <label><input type="checkbox" 
+                            rv-checked="model.enable_max_q"/>Max Quantizer</label>
+              <input id="max-q" type="range" 
+                     min="0" max="63" 
+                     rv-enabled="model.enable_max_q" 
+                     rv-input="model.max_q"/>
               <span class="value" rv-text="model.max_q"></span>
             </div>
           </div>
@@ -444,7 +462,6 @@
         ui: ui
       });
 
-      var rangeControl = null
 
       /*$.each(view.bindings, function(index, binding){
         var el = binding.el;
@@ -458,12 +475,21 @@
             });
         }
       });*/
-
-
-
       $('#cmd').css('visibility', 'visible');
 
+      var textControl = null;
+
+      $('#panel [data-control-id]:not([data-control-id=""])')
+        .on('mouseenter', function(event) {
+          var id = $(event.target).attr('data-control-id');
+          textControl = $('#' + id);
+        })
+        .on('mouseleave', function (event) {
+          textControl = null;
+        });
+      
       var rangeControl = null;
+
       $('#panel input[type=range]')
         .on('mouseenter', function(event){
           rangeControl = $(event.target);
@@ -471,17 +497,6 @@
         .on('mouseleave', function(event ){
           rangeControl = null;
         });
-
-      var control = null;
-
-      /*$('#target-bitrate')
-        .on('mouseenter', function(event) {
-          console.log(event.target);
-          control = event.target; 
-        })
-        .on('mouseleave', function (event) {
-          control = null;
-        });*/
 
       $(document).on('keydown', function(event) {
         if (rangeControl) {
@@ -494,20 +509,19 @@
             event.preventDefault();
           }
         }
-
-        if (control) {
-          var delta = (event.ctrlKey && event.shiftKey) ? 1000 : (event.shiftKey ? 100 : 10);
-
+        
+        if (textControl) {  
+          var delta = (event.ctrlKey && event.shiftKey) ? 100 : (event.shiftKey ? 10 : 1);
+          var val = parseInt(textControl.val());
           if (event.keyCode === 38) {
-            m.target_bitrate += delta;
+            textControl.val(val + delta).trigger('change');
             event.preventDefault();
           } else if (event.keyCode === 40) {
-            m.target_bitrate -= delta;
+            textControl.val(val - delta).trigger('change');
             event.preventDefault();
-          }
+          } 
         }
       });
-
 
       $(document).on('mousewheel', function(event) {
         if (rangeControl) {
@@ -517,10 +531,10 @@
           event.preventDefault();
         }
 
-        if (control) {
-          var mult = event.originalEvent.wheelDelta > 0 ? 1 : -1;
-          var delta = (event.ctrlKey && event.shiftKey) ? 1000 : (event.shiftKey ? 100 : 10);
-          m.target_bitrate += mult * delta;
+        if (textControl) {  
+          var delta = event.originalEvent.wheelDelta > 0 ? 1 : -1;
+          var val = parseInt(textControl.val());
+          textControl.val(val + delta).trigger('change');
           event.preventDefault();
         }
       });
@@ -533,9 +547,6 @@
         var clipboard = event.clipboardData;
         clipboard.setData("text/plain", cmd);
       });
-
-      
-
     </script>
   </body>
 </html>
