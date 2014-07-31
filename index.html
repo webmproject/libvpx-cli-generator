@@ -121,7 +121,8 @@
              rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
           <p rv-class-selected="ui.aq_inside"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
-          <p>input.y4m</p>
+          <p rv-show="model.input_format | in i420 i422 i444 yv12">--{model.input_format} --width={model.input_width} --height={model.input_height} {model.input_name}.yuv</p>
+          <p rv-show="model.input_format | in y4m">{model.input_name}.y4m</p>
           <p rv-class-selected="ui.output_inside"><span rv-show="model.output_format | eq ivf">--ivf</span> -o {model.output_name}.{model.output_format}</p>
         </div>
       </div>
@@ -256,10 +257,49 @@
       </div>
 
       <div class="section">
+        <div class="title">Input</div>
+        <div class="body" rv-inside="ui.input_inside">
+          <label><input type="radio"
+                        name="input_format"
+                        value="y4m"
+                        rv-checked="model.input_format"/>Y4M</label><br/>
+          <label><input type="radio"
+                        name="input_format"
+                        value="i420"
+                        rv-checked="model.input_format"/>YUV 4:2:0</label><br/>
+          <label><input type="radio"
+                        name="input_format"
+                        value="i422"
+                        rv-checked="model.input_format"/>YUV 4:2:2</label><br/>
+          <label><input type="radio"
+                        name="input_format"
+                        value="i444"
+                        rv-checked="model.input_format"/>YUV 4:4:4</label><br/>
+          <label><input type="radio"
+                        name="input_format"
+                        value="yv12"
+                        rv-checked="model.input_format"/>YV12</label><br/>
+          Frame Size <input type="text"
+                            rv-input="model.input_width"
+                            rv-enabled="model.input_format | in i420 i422 i444 yv12"/> &times; 
+                     <input type="text"
+                            rv-input="model.input_height"
+                            rv-enabled="model.input_format | in i420 i422 i444 yv12"/><br/>
+          Filename <input type="text" rv-input="model.input_name"/>
+        </div>
+      </div>
+
+      <div class="section">
         <div class="title">Output</div>
         <div class="body" rv-inside="ui.output_inside">
-          <label><input type="radio" name="output_format" value="webm" rv-checked="model.output_format"/>WebM</label>
-          <label><input type="radio" name="output_format" value="ivf"  rv-checked="model.output_format"/>IVF</label><br/>
+          <label><input type="radio"
+                        name="output_format"
+                        value="webm"
+                        rv-checked="model.output_format"/>WebM</label><br/>
+          <label><input type="radio"
+                        name="output_format"
+                        value="ivf"
+                        rv-checked="model.output_format"/>IVF</label><br/>
           Filename <input type="text" rv-input="model.output_name"/>
         </div>
       </div>
@@ -312,6 +352,7 @@
         auto_alt_ref_inside: false,
         lag_in_frames_inside: false,
         output_inside: false,
+        input_inside:false,
       };
 
       function getParamCycle(param, values) {
@@ -326,6 +367,10 @@
                verbose: false,
                psnr: false,
                quet: false,
+               input_format: 'y4m', // 'y4m', 'i420', 'i422', 'i444'
+               input_width: 640,
+               input_height: 480,
+               input_name: 'input',
                output_format: 'webm', // 'ivf', 'webm'
                output_name:  'output', 
                passes: 2,            // 1, 2
