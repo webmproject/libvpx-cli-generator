@@ -122,8 +122,7 @@
           <p rv-class-selected="ui.aq_inside"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
           <p>input.y4m</p>
-          <p rv-show="model.ivf">--ivf -o output.ivf</p>
-          <p rv-hide="model.ivf">-o output.webm</p>
+          <p rv-class-selected="ui.output_inside"><span rv-show="model.output_format | eq ivf">--ivf</span> -o {model.output_name}.{model.output_format}</p>
         </div>
       </div>
 
@@ -257,6 +256,15 @@
       </div>
 
       <div class="section">
+        <div class="title">Output</div>
+        <div class="body" rv-inside="ui.output_inside">
+          <label><input type="radio" name="output_format" value="webm" rv-checked="model.output_format"/>WebM</label>
+          <label><input type="radio" name="output_format" value="ivf"  rv-checked="model.output_format"/>IVF</label><br/>
+          Filename <input type="text" rv-input="model.output_name"/>
+        </div>
+      </div>
+
+      <div class="section">
         <div class="title">Miscellaneous</div>
         <div class="body">
           <label rv-inside="ui.debug_inside">
@@ -270,9 +278,6 @@
           </label><br/>
           <label rv-inside="ui.quiet_inside">
             <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
-          </label><br/>
-          <label>
-            <input type="checkbox" rv-checked="model.ivf"/>Output IVF file
           </label><br/>
           <div rv-inside="ui.lag_in_frames_inside">
             <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in frames</label>
@@ -306,6 +311,7 @@
         kf_max_dist_inside: false,
         auto_alt_ref_inside: false,
         lag_in_frames_inside: false,
+        output_inside: false,
       };
 
       function getParamCycle(param, values) {
@@ -320,7 +326,8 @@
                verbose: false,
                psnr: false,
                quet: false,
-               ivf: false,
+               output_format: 'webm', // 'ivf', 'webm'
+               output_name:  'output', 
                passes: 2,            // 1, 2
                passes_cycle: getParamCycle('passes', [1, 2]),
                end_usage: 'vbr',     // 'vbr', 'cbr', 'cq', 'q'
