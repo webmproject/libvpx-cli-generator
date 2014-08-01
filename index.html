@@ -16,6 +16,7 @@
       input[type='radio'] {
         cursor: pointer; 
       }
+
       label { 
         cursor: pointer; 
       }
@@ -52,6 +53,7 @@
         padding-bottom:10px;
         padding-left:5px;
         margin-bottom: 10px;
+        height: 3em;
       }
 
       #cmd-copy {
@@ -124,29 +126,31 @@
           <p rv-class-selected="ui.auto_alt_ref_inside"
              rv-hide="model.auto_alt_ref">--auto-alt-ref=0</p>
           <p rv-class-selected="ui.tiles_inside"
-             rv-show="model.tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
+             rv-show="model.enable_tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
           <p rv-class-selected="ui.aq_inside"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
+          <p rv-show="model.input.enable_skip">--skip={model.input.skip}</p>
+          <p rv-show="model.input.enable_limit">--limit={model.input.limit}</p>
           <p rv-class-selected="ui.input_inside"
-             rv-show="model.input_format | in i420 i422 i444 yv12">--{model.input_format} --width={model.input_width} --height={model.input_height} {model.input_name}.yuv</p>
+             rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height} {model.input.name}.yuv</p>
           <p rv-class-selected="ui.input_inside"
-             rv-show="model.input_format | in y4m">{model.input_name}.y4m</p>
-          <p rv-class-selected="ui.output_inside"><span rv-show="model.output_format | eq ivf">--ivf</span> -o {model.output_name}.{model.output_format}</p>
+             rv-show="model.input.format | in y4m">{model.input.name}.y4m</p>
+          <p rv-class-selected="ui.output_inside"><span rv-show="model.output.format | eq ivf">--ivf</span> -o {model.output.name}.{model.output.format}</p>
         </div>
       </div>
 
       <div style="float:left">
-        <div class="section" rv-inside="ui.passes_inside">
+        <div class="section">
           <div class="title">Passes</div>
-          <div class="body">
-            <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>Single</label><br/>
-            <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Multi</label><br/>
+          <div class="body" rv-inside="ui.passes_inside">
+            <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>Single</label>
+            <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Multi</label>
           </div>
         </div>
 
-        <div class="section" rv-inside="ui.end_usage_inside">
+        <div class="section">
           <div class="title">Usage</div>
-          <div class="body">
+          <div class="body" rv-inside="ui.end_usage_inside">
             <label><input type="radio"
                           name="end-usage"
                           value="vbr"
@@ -163,13 +167,13 @@
             <label><input type="radio"
                           name="end-usage"
                           value="q"
-                          rv-checked="model.end_usage"/>Q (Constant Quality)</label><br/>
+                          rv-checked="model.end_usage"/>Q (Constant Quality)</label>
           </div>
         </div>
 
-        <div class="section" rv-inside="ui.speed_inside">
+        <div class="section">
           <div class="title">Speed</div>
-          <div class="body">
+          <div class="body" rv-inside="ui.speed_inside">
             <label><input type="radio" name="quality" value="rt" rv-checked="model.quality"/>Real Time</label>
             <label><input type="radio" name="quality" value="good" rv-checked="model.quality"/>Good</label>
             <label><input type="radio" name="quality" value="best" rv-checked="model.quality"/>Best</label><br/>
@@ -231,13 +235,13 @@
         <div class="section">
           <div class="title">Tiles</div>
           <div class="body" rv-inside="ui.tiles_inside">
-            <label><input type="checkbox" rv-checked="model.tiles"/>Enable</label>
-              <select rv-value="model.tile_rows" rv-enabled="model.tiles">
+            <label><input type="checkbox" rv-checked="model.enable_tiles"/>Enable</label>
+              <select rv-value="model.tile_rows" rv-enabled="model.enable_tiles">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">4</option>
               </select> &times;
-              <select rv-value="model.tile_cols" rv-enabled="model.tiles">
+              <select rv-value="model.tile_cols" rv-enabled="model.enable_tiles">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">4</option>
@@ -278,30 +282,49 @@
             <label><input type="radio"
                           name="input_format"
                           value="y4m"
-                          rv-checked="model.input_format"/>Y4M</label><br/>
-            <label><input type="radio"
-                          name="input_format"
-                          value="i420"
-                          rv-checked="model.input_format"/>YUV 4:2:0</label><br/>
-            <label><input type="radio"
-                          name="input_format"
-                          value="i422"
-                          rv-checked="model.input_format"/>YUV 4:2:2</label><br/>
-            <label><input type="radio"
-                          name="input_format"
-                          value="i444"
-                          rv-checked="model.input_format"/>YUV 4:4:4</label><br/>
-            <label><input type="radio"
-                          name="input_format"
-                          value="yv12"
-                          rv-checked="model.input_format"/>YV12</label><br/>
-            Frame Size <input type="text"
-                              rv-input="model.input_width"
-                              rv-enabled="model.input_format | in i420 i422 i444 yv12"/> &times; 
-                       <input type="text"
-                              rv-input="model.input_height"
-                              rv-enabled="model.input_format | in i420 i422 i444 yv12"/><br/>
-            Filename <input type="text" rv-input="model.input_name"/>
+                          rv-checked="model.input.format"/>Y4M</label><br/>
+            <div>
+              <div>
+                <label><input type="radio"
+                              name="input_format"
+                              value="i420"
+                              rv-checked="model.input.format"/>YUV 4:2:0</label><br/>
+                <label><input type="radio"
+                              name="input_format"
+                              value="i422"
+                              rv-checked="model.input.format"/>YUV 4:2:2</label><br/>
+                <label><input type="radio"
+                              name="input_format"
+                              value="i444"
+                              rv-checked="model.input.format"/>YUV 4:4:4</label><br/>
+                <label><input type="radio"
+                              name="input_format"
+                              value="yv12"
+                              rv-checked="model.input.format"/>YV12</label><br/>
+              </div>
+            
+              <div>
+                Size: <input type="text"
+                       rv-input="model.input.width"
+                       rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times; 
+                <input type="text"
+                       rv-input="model.input.height"
+                       rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
+              </div>
+            </div>
+
+
+            <div>
+              <label><input type="checkbox" rv-checked="model.input.enable_skip"/>Skip</label>
+              <input type="text" rv-input="model.input.skip" rv-enabled="model.input.enable_skip"/>frames
+            </div>
+
+            <div>
+              <label><input type="checkbox" rv-checked="model.input.enable_limit"/>Limit</label>
+              <input type="text" rv-input="model.input.limit" rv-enabled="model.input.enable_limit"/>frames
+            </div>
+
+            Filename <input type="text" rv-input="model.input.name"/>
           </div>
         </div>
 
@@ -311,12 +334,12 @@
             <label><input type="radio"
                           name="output_format"
                           value="webm"
-                          rv-checked="model.output_format"/>WebM</label><br/>
+                          rv-checked="model.output.format"/>WebM</label><br/>
             <label><input type="radio"
                           name="output_format"
                           value="ivf"
-                          rv-checked="model.output_format"/>IVF</label><br/>
-            Filename <input type="text" rv-input="model.output_name"/>
+                          rv-checked="model.output.format"/>IVF</label><br/>
+            Filename <input type="text" rv-input="model.output.name"/>
           </div>
         </div>
         <div class="section">
@@ -336,7 +359,7 @@
             </label><br/>
             <div rv-inside="ui.lag_in_frames_inside">
               <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in frames</label>
-              <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/>frames
+              <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/>
             </div>
           </div>
         </div>
@@ -383,12 +406,16 @@
                verbose: false,
                psnr: false,
                quet: false,
-               input_format: 'y4m', // 'y4m', 'i420', 'i422', 'i444'
-               input_width: 640,
-               input_height: 480,
-               input_name: 'input',
-               output_format: 'webm', // 'ivf', 'webm'
-               output_name:  'output', 
+               input: {format: 'y4m', // 'y4m', 'i420', 'i422', 'i444'
+                       width: 640,
+                       height: 480,
+                       name: 'input',
+                       enable_limit: false,
+                       limit: 100,
+                       enable_skip: false,
+                       skip: 0},
+               output: {format: 'webm', // 'ivf', 'webm'
+                        name: 'output'},
                passes: 2,            // 1, 2
                passes_cycle: getParamCycle('passes', [1, 2]),
                end_usage: 'vbr',     // 'vbr', 'cbr', 'cq', 'q'
@@ -399,17 +426,17 @@
                target_bitrate: 600,  // > 0
                cq_level: 10,         // 0, 1, 2, ..., 63
                aq: 0,                // 0, 1, 2, 3
-               tiles: false,
+               enable_tiles: false,
                tile_rows: 0,
                tile_cols: 0,
                auto_alt_ref: 1,
                enable_kf_min_dist: false,
-               enable_kf_max_dist: false,
                kf_min_dist: 0,
+               enable_kf_max_dist: false,
                kf_max_dist: 9999,
                enable_min_q: false,
-               enable_max_q: false,
                min_q: 0,
+               enable_max_q: false,
                max_q: 63,
                enable_lag_in_frames: false,
                lag_in_frames: 25
@@ -462,19 +489,6 @@
         ui: ui
       });
 
-
-      /*$.each(view.bindings, function(index, binding){
-        var el = binding.el;
-        if (el.nodeName === "INPUT" && el.type === "range") {
-          $(el)
-            .on('mouseenter', function(event) {
-              rangeControl = $(event.target);
-            })
-            .on('mouseleave', function(event ) {
-              rangeControl = null;
-            });
-        }
-      });*/
       $('#cmd').css('visibility', 'visible');
 
       var textControl = null;
