@@ -92,6 +92,8 @@
              rv-show="model.psnr">--psnr</p>
           <p rv-class-selected="ui.quiet_inside"
              rv-show="model.quiet">--quiet</p>
+          <p rv-class-selected="ui.frame_parallel"
+             rv-show="model.frame_parallel">--frame-parallel</p>
           <p rv-on-click="model.passes_cycle"
              rv-class-selected="ui.passes_inside"
              rv-inside="ui.passes_inside">--passes={model.passes}</p>
@@ -375,9 +377,12 @@
             <label rv-inside="ui.quiet_inside">
               <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
             </label><br/>
+            <label rv-inside="ui.frame_parallel">
+              <input type="checkbox" rv-checked="model.frame_parallel"/>Enable frame parallel decodability
+            </label>
             <div rv-inside="ui.lag_in_frames_inside">
-              <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in frames</label>
-              <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/>
+              <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in </label>
+              <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/> frames
             </div>
           </div>
         </div>
@@ -404,6 +409,7 @@
         verbose_inside: false,
         psnr_inside: false,
         quiet_inside: false,
+        frame_parallel: false,
         min_q_inside: false,
         max_q_inside: false,
         kf_min_dist_inside: false,
@@ -426,6 +432,7 @@
                verbose: false,
                psnr: false,
                quet: false,
+               frame_parallel: false,
                input: {format: 'y4m', // 'y4m', 'i420', 'i422', 'i444'
                        width: 640,
                        height: 480,
