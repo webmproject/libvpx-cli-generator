@@ -144,7 +144,7 @@
           <p rv-class-selected="ui.input_inside"
              rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height} {model.input.name}.yuv</p>
           <p rv-class-selected="ui.input_inside"
-             rv-show="model.input.format | in y4m">{model.input.name}.y4m</p>
+             rv-show="model.input.format | in y4m"><span rv-show="model.input.type | eq file">{model.input.name}.y4m</span><span rv-show="model.input.type | eq stdin">-</span></p>
           <p rv-class-selected="ui.output_inside"><span rv-show="model.output.format | eq ivf">--ivf</span> -o {model.output.name}.{model.output.format}</p>
         </div>
       </div>
@@ -319,7 +319,7 @@
                           value="y4m"
                           rv-checked="model.input.format"/>Y4M</label><br/>
             <div>
-              <div>
+              <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px">
                 <label><input type="radio"
                               name="input_format"
                               value="i420"
@@ -338,14 +338,16 @@
                               rv-checked="model.input.format"/>YV12</label><br/>
               </div>
             
-              <div>
-                Size: <input type="text"
+              <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px">
+                <input style="width:40px" type="text"
                        rv-input="model.input.width"
                        rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times; 
-                <input type="text"
+                <input style="width:40px" type="text"
                        rv-input="model.input.height"
                        rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
               </div>
+
+              <div style="clear:both"></div>
             </div>
 
 
@@ -359,7 +361,14 @@
               <input type="text" rv-input="model.input.limit" rv-enabled="model.input.enable_limit"/>frames
             </div>
 
-            Filename <input type="text" rv-input="model.input.name"/>
+            Source
+            <div class="indent">
+              <label><input type="radio" name="input-type" value="file"
+                            rv-checked="model.input.type"/>File</label>
+                <input type="text" rv-input="model.input.name"/><br/>
+              <label><input type="radio" name="input-type" value="stdin"
+                            rv-checked="model.input.type"/>STDIN</label><br/>
+            </div>
           </div>
         </div>
 
@@ -451,6 +460,7 @@
                input: {format: 'y4m', // 'y4m', 'i420', 'i422', 'i444'
                        width: 640,
                        height: 480,
+                       type: 'file', // 'file', 'stdin'
                        name: 'input',
                        enable_limit: false,
                        limit: 100,
