@@ -211,35 +211,35 @@
 
         <div class="section">
           <div class="title">Quantization</div>
-          <div class="body">
-            <div rv-inside="ui.cq_level_inside">
-              <label>Main Quantizer<input id="cq-level" type="range"
-                                          min="0" max="63"
-                                          rv-input="model.cq_level" 
-                                          rv-enabled="model.end_usage | in cq q"/></label>
-              <span class="value" rv-text="model.cq_level"></span>
-            </div>
-
-            <div rv-inside="ui.min_q_inside">
-              <label><input type="checkbox" 
-                            rv-checked="model.enable_min_q"/>Min Quantizer</label>
-              <input id="min-q" type="range" 
-                     min="0" max="63" 
-                     rv-enabled="model.enable_min_q" 
-                     rv-input="model.min_q"/>
-              <span class="value" rv-text="model.min_q"></span>
-            </div>
-
-            <div rv-inside="ui.max_q_inside">
-              <label><input type="checkbox" 
-                            rv-checked="model.enable_max_q"/>Max Quantizer</label>
-              <input id="max-q" type="range" 
-                     min="0" max="63" 
-                     rv-enabled="model.enable_max_q" 
-                     rv-input="model.max_q"/>
-              <span class="value" rv-text="model.max_q"></span>
-            </div>
-          </div>
+          <table class="body" role="presentation">
+            <tr rv-inside="ui.cq_level_inside">
+              <td></td>
+              <td>Main Quantizer</td>
+              <td><input id="cq-level" type="range"
+                         min="0" max="63"
+                         rv-input="model.cq_level" 
+                         rv-enabled="model.end_usage | in cq q"/></td>
+              <td class="value" rv-text="model.cq_level"></td>
+            </tr>
+            <tr rv-inside="ui.min_q_inside">
+              <td><input id="enable-min-q" type="checkbox" rv-checked="model.enable_min_q"/></td>
+              <td><label for="enable-min-q">Min Quantizer</label></td>
+              <td><input id="min-q" type="range" 
+                         min="0" max="63" 
+                         rv-enabled="model.enable_min_q" 
+                         rv-input="model.min_q"/></td>
+              <td class="value" rv-text="model.min_q"></td>
+            </tr>
+            <tr rv-inside="ui.max_q_inside">
+              <td><input id="enable-max-q" type="checkbox" rv-checked="model.enable_max_q"/></td>
+              <td><label for="enable-max-q">Max Quantizer</label></td>
+              <td><input id="max-q" type="range" 
+                         min="0" max="63" 
+                         rv-enabled="model.enable_max_q" 
+                         rv-input="model.max_q"/></td>
+              <td class="value" rv-text="model.max_q"></td>
+            </tr>
+          </table>
         </div>
 
         <div class="section">
