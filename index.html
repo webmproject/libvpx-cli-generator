@@ -193,20 +193,35 @@
         </div>
 
         <div class="section">
-          <div class="title">Rate Control</div> 
-          <div class="body" >
-            <div rv-inside="ui.target_bitrate_inside">
-              Bitrate<input id="target-bitrate" type="text" rv-input="model.target_bitrate" rv-enabled="model.end_usage | in vbr cbr cq"/> kbps
-            </div>
-            <div rv-inside="ui.undershoot_pct_inside">
-              <label><input type="checkbox" rv-checked="model.enable_undershoot_pct"/>Undershoot</label>
-              <input id="undershoot-pct" type="text" rv-input="model.undershoot_pct" rv-enabled="model.enable_undershoot_pct"/> %
-            </div>
-            <div rv-inside="ui.overshoot_pct_inside">
-              <label><input type="checkbox" rv-checked="model.enable_overshoot_pct"/>Overshoot</label>
-              <input id="overshoot-pct" type="text" rv-input="model.overshoot_pct" rv-enabled="model.enable_overshoot_pct"/> %
-            </div>
-          </div>
+          <div class="title">Rate Control</div>
+          <table class="body" role="presentation">
+            <tr rv-inside="ui.target_bitrate_inside">
+              <td></td>
+              <td>Bitrate</td>
+              <td><input id="target-bitrate" type="text"
+                         rv-input="model.target_bitrate"
+                         rv-enabled="model.end_usage | in vbr cbr cq"/></td>
+              <td>kbps</td>
+            </tr>
+            <tr rv-inside="ui.undershoot_pct_inside">
+              <td><input id="enable-undershoot-pct" type="checkbox"
+                         rv-checked="model.enable_undershoot_pct"/></td>
+              <td><label for="enable-undershoot-pct">Undershoot</label></td>
+              <td><input id="undershoot-pct" type="text"
+                         rv-input="model.undershoot_pct"
+                         rv-enabled="model.enable_undershoot_pct"/></td>
+              <td>%</td>
+            </tr>
+            <tr rv-inside="ui.overshoot_pct_inside">
+              <td><input id="enable-overshoot-pct" type="checkbox"
+                         rv-checked="model.enable_overshoot_pct"/></td>
+              <td><label for="enable-overshoot-pct">Overshoot</label></td>
+              <td><input id="overshoot-pct" type="text"
+                         rv-input="model.overshoot_pct"
+                         rv-enabled="model.enable_overshoot_pct"/></td>
+              <td>%</td>
+            </tr>
+          </table>
         </div>
 
         <div class="section">
