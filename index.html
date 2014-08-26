@@ -444,6 +444,7 @@
             </div>
           </div>
         </div>
+        <button id="reset">Reset</button>
       </div>
     </div>
     
@@ -531,6 +532,12 @@
                lag_in_frames: {value: 25, enabled: false},
                fps: {num:30, den:1, enabled:false},
              };
+
+      var mcopy = $.extend(true, {}, m);
+
+      $('#reset').on('click', function() {
+        $.extend(m, mcopy);
+      });
 
       rivets.binders.inside = {
         publishes: true,
