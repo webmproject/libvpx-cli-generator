@@ -94,10 +94,10 @@
              rv-show="model.quiet">--quiet</p>
           <p rv-class-selected="ui.frame_parallel"
              rv-show="model.frame_parallel">--frame-parallel</p>
-          <p rv-on-click="model.passes_cycle"
+          <p rv-on-click="ui.cycle.passes"
              rv-class-selected="ui.in.passes"
              rv-inside="ui.in.passes">--passes={model.passes}</p>
-          <p rv-on-click="model.end_usage_cycle"
+          <p rv-on-click="ui.cycle.end_usage"
              rv-class-selected="ui.in.end_usage"
              rv-inside="ui.in.end_usage">--end-usage={model.end_usage}</p>
           <p data-control-id="target-bitrate"
@@ -116,7 +116,7 @@
              rv-class-selected="ui.in.cq_level"
              rv-show="model.end_usage | in cq q"
              rv-inside="ui.in.cq_level">--cq-level={model.cq_level}</p>
-          <p rv-on-click="model.quality_cycle"
+          <p rv-on-click="ui.cycle.quality"
              rv-inside="ui.in.speed"
              rv-class-selected="ui.in.speed">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></p>
           <p rv-class-selected="ui.in.kf_min_dist"
@@ -454,6 +454,13 @@
     <script type="text/javascript" src="js/rivets.min.js"></script>
     
     <script>
+      function getParamCycle(param, values) {
+        return function(event, models) {
+          var model = models.model;
+          model[param] = values[($.inArray(model[param], values) + 1) % values.length];
+        };
+      }
+
       var ui = {
         in: {
           passes: false,
@@ -482,15 +489,13 @@
           output_format: false,
           output_dst: false,
           fps: false
+        },
+        cycle: {
+          passes: getParamCycle('passes', [1, 2]),
+          end_usage: getParamCycle('end_usage', ['vbr', 'cbr', 'cq', 'q']),
+          quality: getParamCycle('quality', ['rt', 'good', 'best']),
         }
       };
-
-      function getParamCycle(param, values) {
-        return function(event, models) {
-          var model = models.model;
-          model[param] = values[($.inArray(model[param], values) + 1) % values.length];
-        };
-      }
 
       var m = {codec:'vp9', 
                debug: false,
@@ -509,12 +514,9 @@
                         type: 'file', //  'file', 'stdout'
                         name: 'output'},
                passes: 2,            // 1, 2
-               passes_cycle: getParamCycle('passes', [1, 2]),
                end_usage: 'vbr',     // 'vbr', 'cbr', 'cq', 'q'
-               end_usage_cycle: getParamCycle('end_usage', ['vbr', 'cbr', 'cq', 'q']),
                quality: 'good',      // 'rt', 'good', 'best'
-               quality_cycle: getParamCycle('quality', ['rt', 'good', 'best']),
-               speed: 1,             // 1, 2, 3, ..., 10
+               speed: 1,             // 0, 1, 2, 3, ..., 10
                target_bitrate: 600,  // > 0
                enable_undershoot_pct: false,
                undershoot_pct: 10,
