@@ -143,6 +143,8 @@
              rv-class-selected="ui.input_skip_inside">--skip={model.input.skip.value}</p>
           <p rv-show="model.input.limit.enabled"
              rv-class-selected="ui.input_limit_inside">--limit={model.input.limit.value}</p>
+          <p rv-show="model.fps.enabled"
+             rv-class-selected="ui.fps_inside">--fps={model.fps.num}/{model.fps.den}</p>
 
           <p rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height}</p>
           <p rv-show="model.input.type | eq file"
@@ -432,8 +434,13 @@
               <input type="checkbox" rv-checked="model.frame_parallel"/>Enable frame parallel decodability
             </label>
             <div rv-inside="ui.lag_in_frames_inside">
-              <label><input type="checkbox" rv-checked="model.lag_in_frames.enabled"/>Lag-in </label>
+              <label><input type="checkbox" rv-checked="model.lag_in_frames.enabled"/>Lag-in</label>
               <input type="text" rv-enabled="model.lag_in_frames.enabled" rv-input="model.lag_in_frames.value"/> frames
+            </div>
+            <div rv-inside="ui.fps_inside">
+              <label><input type="checkbox" rv-checked="model.fps.enabled"/>FPS</label>
+              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.num"/> /
+              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.den"/>
             </div>
           </div>
         </div>
@@ -474,6 +481,8 @@
 
         output_format_inside: false,
         output_dst_inside: false,
+
+        fps_inside: false
       };
 
       function getParamCycle(param, values) {
@@ -520,6 +529,7 @@
                min_q: {value: 0, enabled: false},
                max_q: {value: 63, enabled: false},
                lag_in_frames: {value: 25, enabled: false},
+               fps: {num:30, den:1, enabled:false},
              };
 
       rivets.binders.inside = {
