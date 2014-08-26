@@ -139,13 +139,24 @@
              rv-show="model.tiles.enabled">--tile-rows={model.tiles.rows} --tile-cols={model.tiles.cols}</p>
           <p rv-class-selected="ui.aq_inside"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
-          <p rv-show="model.input.skip.enabled">--skip={model.input.skip.value}</p>
-          <p rv-show="model.input.limit.enabled">--limit={model.input.limit.value}</p>
-          <p rv-class-selected="ui.input_inside"
-             rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height} {model.input.name}.yuv</p>
-          <p rv-class-selected="ui.input_inside"
-             rv-show="model.input.format | in y4m"><span rv-show="model.input.type | eq file">{model.input.name}.y4m</span><span rv-show="model.input.type | eq stdin">-</span></p>
-          <p rv-class-selected="ui.output_inside"><span rv-show="model.output.format | eq ivf">--ivf</span> -o {model.output.name}.{model.output.format}</p>
+          <p rv-show="model.input.skip.enabled"
+             rv-class-selected="ui.input_skip_inside">--skip={model.input.skip.value}</p>
+          <p rv-show="model.input.limit.enabled"
+             rv-class-selected="ui.input_limit_inside">--limit={model.input.limit.value}</p>
+
+          <p rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height}</p>
+          <p rv-show="model.input.type | eq file"
+             rv-class-selected="ui.input_src_inside">{model.input.name}<span rv-show="model.input.format | in i420 i422 i444 yv12">.yuv</span><span rv-show="model.input.format | in y4m">.y4m</span>
+          </p>
+          <p rv-show="model.input.type | eq stdin"
+             rv-class-selected="ui.input_src_inside">-</p>
+
+          <p rv-show="model.output.format | eq ivf"
+             rv-class-selected="ui.output_format_inside">--ivf</p>
+          <p rv-show="model.output.type | eq file"
+             rv-class-selected="ui.output_dst_inside">-o {model.output.name}.{model.output.format}</p>
+          <p rv-show="model.output.type | eq stdout"
+             rv-class-selected="ui.output_dst_inside">-o -</p>
         </div>
       </div>
 
@@ -313,77 +324,93 @@
       <div style="float:left;margin-left:40px">
         <div class="section">
           <div class="title">Input</div>
-          <div class="body" rv-inside="ui.input_inside">
-            <label><input type="radio"
-                          name="input_format"
-                          value="y4m"
-                          rv-checked="model.input.format"/>Y4M</label><br/>
-            <div>
-              <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px">
-                <label><input type="radio"
-                              name="input_format"
-                              value="i420"
-                              rv-checked="model.input.format"/>YUV 4:2:0</label><br/>
-                <label><input type="radio"
-                              name="input_format"
-                              value="i422"
-                              rv-checked="model.input.format"/>YUV 4:2:2</label><br/>
-                <label><input type="radio"
-                              name="input_format"
-                              value="i444"
-                              rv-checked="model.input.format"/>YUV 4:4:4</label><br/>
-                <label><input type="radio"
-                              name="input_format"
-                              value="yv12"
-                              rv-checked="model.input.format"/>YV12</label><br/>
+          <div class="body">
+
+            Format
+            <div class="indent">
+              <label><input type="radio"
+                            name="input_format"
+                            value="y4m"
+                            rv-checked="model.input.format"/>Y4M</label><br/>
+              <div>
+                <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px">
+                  <label><input type="radio"
+                                name="input_format"
+                                value="i420"
+                                rv-checked="model.input.format"/>YUV 4:2:0</label><br/>
+                  <label><input type="radio"
+                                name="input_format"
+                                value="i422"
+                                rv-checked="model.input.format"/>YUV 4:2:2</label><br/>
+                  <label><input type="radio"
+                                name="input_format"
+                                value="i444"
+                                rv-checked="model.input.format"/>YUV 4:4:4</label><br/>
+                  <label><input type="radio"
+                                name="input_format"
+                                value="yv12"
+                                rv-checked="model.input.format"/>YV12</label>
+                </div>
+
+                <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px">
+                  <input style="width:40px" type="text"
+                         rv-input="model.input.width"
+                         rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times; 
+                  <input style="width:40px" type="text"
+                         rv-input="model.input.height"
+                         rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
+                </div>
+
+                <div style="clear:both"></div>
               </div>
-            
-              <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px">
-                <input style="width:40px" type="text"
-                       rv-input="model.input.width"
-                       rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times; 
-                <input style="width:40px" type="text"
-                       rv-input="model.input.height"
-                       rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
-              </div>
-
-              <div style="clear:both"></div>
-            </div>
-
-
-            <div>
-              <label><input type="checkbox" rv-checked="model.input.skip.enabled"/>Skip</label>
-              <input type="text" rv-input="model.input.skip.value" rv-enabled="model.input.skip.enabled"/>frames
-            </div>
-
-            <div>
-              <label><input type="checkbox" rv-checked="model.input.limit.enabled"/>Limit</label>
-              <input type="text" rv-input="model.input.limit.value" rv-enabled="model.input.limit.enabled"/>frames
             </div>
 
             Source
-            <div class="indent">
+            <div class="indent" rv-inside="ui.input_src_inside">
               <label><input type="radio" name="input-type" value="file"
                             rv-checked="model.input.type"/>File</label>
                 <input type="text" rv-input="model.input.name"/><br/>
               <label><input type="radio" name="input-type" value="stdin"
                             rv-checked="model.input.type"/>STDIN</label><br/>
             </div>
+
+            Frames
+            <div class="indent">
+              <div rv-inside="ui.input_skip_inside">
+                <label><input type="checkbox" rv-checked="model.input.skip.enabled"/>Skip</label>
+                <input type="text" rv-input="model.input.skip.value" rv-enabled="model.input.skip.enabled"/>frames
+              </div>
+
+              <div rv-inside="ui.input_limit_inside">
+                <label><input type="checkbox" rv-checked="model.input.limit.enabled"/>Limit</label>
+                <input type="text" rv-input="model.input.limit.value" rv-enabled="model.input.limit.enabled"/>frames
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="section">
           <div class="title">Output</div>
-          <div class="body" rv-inside="ui.output_inside">
-            <label><input type="radio"
-                          name="output_format"
-                          value="webm"
-                          rv-checked="model.output.format"/>WebM</label><br/>
-            <label><input type="radio"
-                          name="output_format"
-                          value="ivf"
-                          rv-checked="model.output.format"/>IVF</label><br/>
-            Filename <input type="text" rv-input="model.output.name"/>
+          <div class="body">
+            Format
+            <div class="indent" rv-inside="ui.output_format_inside">
+              <label><input type="radio"
+                            name="output_format"
+                            value="webm"
+                            rv-checked="model.output.format"/>WebM</label><br/>
+              <label><input type="radio"
+                            name="output_format"
+                            value="ivf"
+                            rv-checked="model.output.format"/>IVF</label>
+            </div>
+            Destination
+            <div class="indent" rv-inside="ui.output_dst_inside">
+              <label><input type="radio" name="output-type" value="file"
+                            rv-checked="model.output.type"/>File</label>
+                <input type="text" rv-input="model.output.name"/><br/>
+              <label><input type="radio" name="output-type" value="stdout"
+                            rv-checked="model.output.type"/>STDOUT</label>
+            </div>
           </div>
         </div>
         <div class="section">
@@ -440,8 +467,13 @@
         kf_max_dist_inside: false,
         auto_alt_ref_inside: false,
         lag_in_frames_inside: false,
-        output_inside: false,
-        input_inside:false,
+
+        input_skip_inside:false,
+        input_limit_inside:false,
+        input_src_inside:false,
+
+        output_format_inside: false,
+        output_dst_inside: false,
       };
 
       function getParamCycle(param, values) {
@@ -465,6 +497,7 @@
                        limit: {value: 100, enabled: false},
                        skip: {value: 0, enabled: false}},
                output: {format: 'webm', // 'ivf', 'webm'
+                        type: 'file', //  'file', 'stdout'
                         name: 'output'},
                passes: 2,            // 1, 2
                passes_cycle: getParamCycle('passes', [1, 2]),
