@@ -131,10 +131,11 @@
              rv-class-selected="ui.in.max_q"
              rv-show="model.max_q.enabled"
              rv-inside="ui.in.max_q">--max-q={model.max_q.value}</p>
-          <p rv-class-selected="ui.in.auto_alt_ref"
-             rv-show="model.auto_alt_ref">--auto-alt-ref=1</p>
-          <p rv-class-selected="ui.in.auto_alt_ref"
-             rv-hide="model.auto_alt_ref">--auto-alt-ref=0</p>
+          <p rv-class-selected="ui.in.arf.enabled">--auto-alt-ref={model.arf.enabled | bool}</p>
+          <p rv-class-selected="ui.in.arf.nr.frames"
+             rv-show="model.arf.enabled">--arnr-maxframes={model.arf.nr.frames}</p>
+          <p rv-class-selected="ui.in.arf.nr.strength"
+             rv-show="model.arf.enabled">--arnr-strength={model.arf.nr.strength}</p>
           <p rv-class-selected="ui.in.tiles"
              rv-show="model.tiles.enabled">--tile-rows={model.tiles.rows} --tile-cols={model.tiles.cols}</p>
           <p rv-class-selected="ui.in.aq"
@@ -168,8 +169,8 @@
         <div class="section">
           <div class="title">Passes</div>
           <div class="body" rv-inside="ui.in.passes">
-            <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>Single</label>
-            <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Multi</label>
+            <label><input type="radio" name="passes" value="1" rv-checked="model.passes"/>One</label>
+            <label><input type="radio" name="passes" value="2" rv-checked="model.passes"/>Two</label>
           </div>
         </div>
 
@@ -244,7 +245,7 @@
               <td>Main Quantizer</td>
               <td><input id="cq-level" type="range"
                          min="0" max="63"
-                         rv-input="model.cq_level" 
+                         rv-input="model.cq_level"
                          rv-enabled="model.end_usage | in cq q"/></td>
               <td class="value" rv-text="model.cq_level"/>
             </tr>
@@ -252,16 +253,16 @@
               <td><input id="enable-min-q" type="checkbox" rv-checked="model.min_q.enabled"/></td>
               <td><label for="enable-min-q">Min Quantizer</label></td>
               <td><input id="min-q" type="range" 
-                         min="0" max="63" 
-                         rv-enabled="model.min_q.enabled" 
+                         min="0" max="63"
+                         rv-enabled="model.min_q.enabled"
                          rv-input="model.min_q.value"/></td>
               <td class="value" rv-text="model.min_q.value"/>
             </tr>
             <tr rv-inside="ui.in.max_q">
               <td><input id="enable-max-q" type="checkbox" rv-checked="model.max_q.enabled"/></td>
               <td><label for="enable-max-q">Max Quantizer</label></td>
-              <td><input id="max-q" type="range" 
-                         min="0" max="63" 
+              <td><input id="max-q" type="range"
+                         min="0" max="63"
                          rv-enabled="model.max_q.enabled" 
                          rv-input="model.max_q.value"/></td>
               <td class="value" rv-text="model.max_q.value"/>
@@ -307,7 +308,7 @@
               <td><input id="enable-min-distance" type="checkbox" rv-checked="model.kf_min_dist.enabled"/></td>
               <td><label for="enable-min-distance">Min Distance</label></td>
               <td><input type="text" 
-                         rv-enabled="model.kf_min_dist.enabled" 
+                         rv-enabled="model.kf_min_dist.enabled"
                          rv-input="model.kf_min_dist.value"/>&nbsp;frames</td>
             </tr>
             <tr rv-inside="ui.in.kf_max_dist">
@@ -322,8 +323,30 @@
 
         <div class="section">
           <div class="title">Alt Reference Frames</div>
-          <div class="body" rv-inside="ui.in.auto_alt_ref">
-            <label><input type="checkbox" rv-checked="model.auto_alt_ref"/>Enable</label>
+          <div class="body">
+            <div rv-inside="ui.in.arf.enabled">
+              <label><input type="checkbox" rv-checked="model.arf.enabled"/>Enable</label>
+            </div>
+
+            Temporal Noise Reduction
+            <table class="indent">
+              <tr rv-inside="ui.in.arf.nr.frames">
+                <td>Frames</td>
+                <td><input type="range"
+                           min="0" max="15"
+                           rv-enabled="model.arf.enabled"
+                           rv-input="model.arf.nr.frames"/></td>
+                <td class="value" rv-text="model.arf.nr.frames"/>
+              </tr>
+              <tr rv-inside="ui.in.arf.nr.strength">
+                <td>Strength</td>
+                <td><input type="range"
+                           min="0" max="6"
+                           rv-enabled="model.arf.enabled"
+                           rv-input="model.arf.nr.strength"/></td>
+                <td class="value" rv-text="model.arf.nr.strength"/>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -494,7 +517,8 @@
           max_q: false,
           kf_min_dist: false,
           kf_max_dist: false,
-          auto_alt_ref: false,
+          arf: {enabled: false,
+                nr: {frames: false, strength: false}},
           lag_in_frames: false,
           input: {skip: false,
                   limit: false,
@@ -540,7 +564,8 @@
                cq_level: 10,         // 0, 1, 2, ..., 63
                aq: 0,                // 0, 1, 2, 3
                tiles: {rows: 0, cols:0, enabled: false},
-               auto_alt_ref: 1,
+               arf: {enabled: true,
+                     nr: {frames: 0, strength: 0}},
                kf_min_dist: {value: 0, enabled: false},
                kf_max_dist: {value: 9999, enabled: false},
                min_q: {value: 0, enabled: false},
@@ -588,6 +613,10 @@
           $(el).off('input change', this.publish);
         }
       };
+
+      rivets.formatters.bool = function(value){
+        return value ? 1 : 0;
+      }
 
       rivets.formatters.eq = function (value, args) {
         return value === args;
