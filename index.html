@@ -481,6 +481,8 @@
           </div>
         </div>
         <button id="reset">Reset</button>
+        <button id="save">Save</button>
+        <button id="load">Load</button>
       </div>
     </div>
     
@@ -510,8 +512,8 @@
           tiles: false,
           debug: false,
           verbose: false,
-          psnr: false,
           quiet: false,
+          psnr: false,
           frame_parallel: false,
           min_q: false,
           max_q: false,
@@ -540,7 +542,7 @@
                debug: false,
                verbose: false,
                psnr: false,
-               quet: false,
+               quiet: false,
                frame_parallel: false,
                input: {format: 'y4m', // 'y4m', 'i420', 'i422', 'i444'
                        width: 640,
@@ -577,7 +579,20 @@
       var mcopy = $.extend(true, {}, m);
 
       $('#reset').on('click', function() {
-        $.extend(m, mcopy);
+        $.extend(true, m, mcopy);
+      });
+
+      $('#save').on('click', function() {
+        var storage = window.localStorage;
+        storage.setItem('data', JSON.stringify(m));
+      });
+
+      $('#load').on('click', function() {
+        var storage = window.localStorage;
+        var data = storage.getItem('data');
+        if (data) {
+          $.extend(true, m, JSON.parse(data));
+        }
       });
 
       rivets.binders.inside = {
