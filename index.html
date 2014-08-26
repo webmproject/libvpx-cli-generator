@@ -140,18 +140,20 @@
           <p rv-class-selected="ui.in.aq"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
           <p rv-show="model.input.skip.enabled"
-             rv-class-selected="ui.in.input_skip">--skip={model.input.skip.value}</p>
+             rv-class-selected="ui.in.input.skip">--skip={model.input.skip.value}</p>
           <p rv-show="model.input.limit.enabled"
-             rv-class-selected="ui.in.input_limit">--limit={model.input.limit.value}</p>
+             rv-class-selected="ui.in.input.limit">--limit={model.input.limit.value}</p>
           <p rv-show="model.fps.enabled"
              rv-class-selected="ui.in.fps">--fps={model.fps.num}/{model.fps.den}</p>
 
-          <p rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height}</p>
+          <p rv-show="model.input.format | in i420 i422 i444 yv12"
+             rv-class-selected="ui.in.input.format">--{model.input.format}</p>
+          <p rv-show="model.input.format | in i420 i422 i444 yv12"
+             rv-class-selected="ui.in.input.size">--width={model.input.width} --height={model.input.height}</p>
           <p rv-show="model.input.type | eq file"
-             rv-class-selected="ui.in.input_src">{model.input.name}<span rv-show="model.input.format | in i420 i422 i444 yv12">.yuv</span><span rv-show="model.input.format | in y4m">.y4m</span>
-          </p>
+             rv-class-selected="ui.in.input.src">{model.input.name}<span rv-show="model.input.format | in i420 i422 i444 yv12">.yuv</span><span rv-show="model.input.format | in y4m">.y4m</span></p>
           <p rv-show="model.input.type | eq stdin"
-             rv-class-selected="ui.in.input_src">-</p>
+             rv-class-selected="ui.in.input.src">-</p>
 
           <p rv-show="model.output.format | eq ivf"
              rv-class-selected="ui.in.output_format">--ivf</p>
@@ -213,8 +215,7 @@
               <td>Bitrate</td>
               <td><input id="target-bitrate" type="text"
                          rv-input="model.target_bitrate"
-                         rv-enabled="model.end_usage | in vbr cbr cq"/></td>
-              <td>kbps</td>
+                         rv-enabled="model.end_usage | in vbr cbr cq"/>&nbsp;kbps</td>
             </tr>
             <tr rv-inside="ui.in.undershoot_pct">
               <td><input id="enable-undershoot-pct" type="checkbox"
@@ -222,8 +223,7 @@
               <td><label for="enable-undershoot-pct">Undershoot</label></td>
               <td><input id="undershoot-pct" type="text"
                          rv-input="model.undershoot_pct"
-                         rv-enabled="model.enable_undershoot_pct"/></td>
-              <td>%</td>
+                         rv-enabled="model.enable_undershoot_pct"/>&nbsp;%</td>
             </tr>
             <tr rv-inside="ui.in.overshoot_pct">
               <td><input id="enable-overshoot-pct" type="checkbox"
@@ -231,8 +231,7 @@
               <td><label for="enable-overshoot-pct">Overshoot</label></td>
               <td><input id="overshoot-pct" type="text"
                          rv-input="model.overshoot_pct"
-                         rv-enabled="model.enable_overshoot_pct"/></td>
-              <td>%</td>
+                         rv-enabled="model.enable_overshoot_pct"/>&nbsp;%</td>
             </tr>
           </table>
         </div>
@@ -247,7 +246,7 @@
                          min="0" max="63"
                          rv-input="model.cq_level" 
                          rv-enabled="model.end_usage | in cq q"/></td>
-              <td class="value" rv-text="model.cq_level"></td>
+              <td class="value" rv-text="model.cq_level"/>
             </tr>
             <tr rv-inside="ui.in.min_q">
               <td><input id="enable-min-q" type="checkbox" rv-checked="model.min_q.enabled"/></td>
@@ -256,7 +255,7 @@
                          min="0" max="63" 
                          rv-enabled="model.min_q.enabled" 
                          rv-input="model.min_q.value"/></td>
-              <td class="value" rv-text="model.min_q.value"></td>
+              <td class="value" rv-text="model.min_q.value"/>
             </tr>
             <tr rv-inside="ui.in.max_q">
               <td><input id="enable-max-q" type="checkbox" rv-checked="model.max_q.enabled"/></td>
@@ -265,7 +264,7 @@
                          min="0" max="63" 
                          rv-enabled="model.max_q.enabled" 
                          rv-input="model.max_q.value"/></td>
-              <td class="value" rv-text="model.max_q.value"></td>
+              <td class="value" rv-text="model.max_q.value"/>
             </tr>
           </table>
         </div>
@@ -303,16 +302,22 @@
 
         <div class="section">
           <div class="title">Key Frames</div>
-          <div class="body">
-            <div rv-inside="ui.in.kf_min_dist">
-              <label><input type="checkbox" rv-checked="model.kf_min_dist.enabled"/>Min Distance</label>
-              <input type="text" rv-enabled="model.kf_min_dist.enabled" rv-input="model.kf_min_dist.value"/>frames
-            </div>
-            <div rv-inside="ui.in.kf_max_dist">
-              <label><input type="checkbox" rv-checked="model.kf_max_dist.enabled"/>Max Distance</label>
-              <input type="text" rv-enabled="model.kf_max_dist.enabled" rv-input="model.kf_max_dist.value"/>frames
-            </div>
-          </div>
+          <table role="presenetation" class="body">
+            <tr rv-inside="ui.in.kf_min_dist">
+              <td><input id="enable-min-distance" type="checkbox" rv-checked="model.kf_min_dist.enabled"/></td>
+              <td><label for="enable-min-distance">Min Distance</label></td>
+              <td><input type="text" 
+                         rv-enabled="model.kf_min_dist.enabled" 
+                         rv-input="model.kf_min_dist.value"/>&nbsp;frames</td>
+            </tr>
+            <tr rv-inside="ui.in.kf_max_dist">
+              <td><input id="enable-max-distance" type="checkbox" rv-checked="model.kf_max_dist.enabled"/></td>
+              <td><label for="enable-max-distance">Max Distance</label></td>
+              <td><input type="text"
+                         rv-enabled="model.kf_max_dist.enabled"
+                         rv-input="model.kf_max_dist.value"/>&nbsp;frames</td>
+            </tr>
+          </table>
         </div>
 
         <div class="section">
@@ -331,33 +336,35 @@
             Format
             <div class="indent">
               <label><input type="radio"
-                            name="input_format"
+                            name="input-format"
                             value="y4m"
                             rv-checked="model.input.format"/>Y4M</label><br/>
               <div>
-                <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px">
+                <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px"
+                     rv-inside="ui.in.input.format">
                   <label><input type="radio"
-                                name="input_format"
+                                name="input-format"
                                 value="i420"
                                 rv-checked="model.input.format"/>YUV 4:2:0</label><br/>
                   <label><input type="radio"
-                                name="input_format"
+                                name="input-format"
                                 value="i422"
                                 rv-checked="model.input.format"/>YUV 4:2:2</label><br/>
                   <label><input type="radio"
-                                name="input_format"
+                                name="input-format"
                                 value="i444"
                                 rv-checked="model.input.format"/>YUV 4:4:4</label><br/>
                   <label><input type="radio"
-                                name="input_format"
+                                name="input-format"
                                 value="yv12"
                                 rv-checked="model.input.format"/>YV12</label>
                 </div>
 
-                <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px">
+                <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px"
+                     rv-inside="ui.in.input.size">
                   <input style="width:40px" type="text"
                          rv-input="model.input.width"
-                         rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times; 
+                         rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times;
                   <input style="width:40px" type="text"
                          rv-input="model.input.height"
                          rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
@@ -368,7 +375,7 @@
             </div>
 
             Source
-            <div class="indent" rv-inside="ui.in.input_src">
+            <div class="indent" rv-inside="ui.in.input.src">
               <label><input type="radio" name="input-type" value="file"
                             rv-checked="model.input.type"/>File</label>
                 <input type="text" rv-input="model.input.name"/><br/>
@@ -377,17 +384,23 @@
             </div>
 
             Frames
-            <div class="indent">
-              <div rv-inside="ui.in.input_skip">
-                <label><input type="checkbox" rv-checked="model.input.skip.enabled"/>Skip</label>
-                <input type="text" rv-input="model.input.skip.value" rv-enabled="model.input.skip.enabled"/>frames
-              </div>
+            <table role="presentation" class="indent">
+              <tr rv-inside="ui.in.input.skip">
+                <td><input id="enable-skip" type="checkbox" rv-checked="model.input.skip.enabled"/></td>
+                <td><label for="enable-skip">Skip</label></td>
+                <td><input type="text" 
+                           rv-input="model.input.skip.value" 
+                           rv-enabled="model.input.skip.enabled"/>&nbsp;frames</td>
+              </tr>
 
-              <div rv-inside="ui.in.input_limit">
-                <label><input type="checkbox" rv-checked="model.input.limit.enabled"/>Limit</label>
-                <input type="text" rv-input="model.input.limit.value" rv-enabled="model.input.limit.enabled"/>frames
-              </div>
-            </div>
+              <tr rv-inside="ui.in.input.limit">
+                <td><input id="enable-limit" type="checkbox" rv-checked="model.input.limit.enabled"/></td>
+                <td><label for="enable-limit">Limit</label></td>
+                <td><input type="text" 
+                           rv-input="model.input.limit.value" 
+                           rv-enabled="model.input.limit.enabled"/>&nbsp;frames</td>
+              </tr>
+            </table>
           </div>
         </div>
 
@@ -483,11 +496,13 @@
           kf_max_dist: false,
           auto_alt_ref: false,
           lag_in_frames: false,
-          input_skip: false,
-          input_limit: false,
-          input_src: false,
-          output_format: false,
-          output_dst: false,
+          input: {skip: false,
+                  limit: false,
+                  format: false,
+                  size: false,
+                  src: false},
+          output: {format: false,
+                   dst: false},
           fps: false
         },
         cycle: {
