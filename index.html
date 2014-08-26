@@ -83,7 +83,7 @@
         <div style="float:clear" id="cmd-line">
           <p>vpxenc --codec=vp9</p>
           <p rv-class-selected="ui.lag_in_frames_inside"
-             rv-show="model.enable_lag_in_frames">--lag-in-frames={model.lag_in_frames}</p>
+             rv-show="model.lag_in_frames.enabled">--lag-in-frames={model.lag_in_frames.value}</p>
           <p rv-class-selected="ui.debug_inside"
              rv-show="model.debug">--debug</p>
           <p rv-class-selected="ui.verbose_inside"
@@ -120,27 +120,27 @@
              rv-inside="ui.speed_inside"
              rv-class-selected="ui.speed_inside">--{model.quality} <span rv-show="model.quality | in rt good">--cpu-used={model.speed}</span></p>
           <p rv-class-selected="ui.kf_min_dist_inside"
-             rv-show="model.enable_kf_min_dist">--kf-min-dist={model.kf_min_dist}</p>
+             rv-show="model.kf_min_dist.enabled">--kf-min-dist={model.kf_min_dist.value}</p>
           <p rv-class-selected="ui.kf_max_dist_inside"
-             rv-show="model.enable_kf_max_dist">--kf-max-dist={model.kf_max_dist}</p>
+             rv-show="model.kf_max_dist.enabled">--kf-max-dist={model.kf_max_dist.value}</p>
           <p data-control-id="min-q"
              rv-class-selected="ui.min_q_inside"
-             rv-show="model.enable_min_q"
-             rv-inside="ui.min_q_inside">--min-q={model.min_q}</p>
+             rv-show="model.min_q.enabled"
+             rv-inside="ui.min_q_inside">--min-q={model.min_q.value}</p>
           <p data-control-id="max-q"
              rv-class-selected="ui.max_q_inside"
-             rv-show="model.enable_max_q"
-             rv-inside="ui.max_q_inside">--max-q={model.max_q}</p>
+             rv-show="model.max_q.enabled"
+             rv-inside="ui.max_q_inside">--max-q={model.max_q.value}</p>
           <p rv-class-selected="ui.auto_alt_ref_inside"
              rv-show="model.auto_alt_ref">--auto-alt-ref=1</p>
           <p rv-class-selected="ui.auto_alt_ref_inside"
              rv-hide="model.auto_alt_ref">--auto-alt-ref=0</p>
           <p rv-class-selected="ui.tiles_inside"
-             rv-show="model.enable_tiles">--tile-rows={model.tile_rows} --tile-cols={model.tile_cols}</p>
+             rv-show="model.tiles.enabled">--tile-rows={model.tiles.rows} --tile-cols={model.tiles.cols}</p>
           <p rv-class-selected="ui.aq_inside"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
-          <p rv-show="model.input.enable_skip">--skip={model.input.skip}</p>
-          <p rv-show="model.input.enable_limit">--limit={model.input.limit}</p>
+          <p rv-show="model.input.skip.enabled">--skip={model.input.skip.value}</p>
+          <p rv-show="model.input.limit.enabled">--limit={model.input.limit.value}</p>
           <p rv-class-selected="ui.input_inside"
              rv-show="model.input.format | in i420 i422 i444 yv12">--{model.input.format} --width={model.input.width} --height={model.input.height} {model.input.name}.yuv</p>
           <p rv-class-selected="ui.input_inside"
@@ -237,22 +237,22 @@
               <td class="value" rv-text="model.cq_level"></td>
             </tr>
             <tr rv-inside="ui.min_q_inside">
-              <td><input id="enable-min-q" type="checkbox" rv-checked="model.enable_min_q"/></td>
+              <td><input id="enable-min-q" type="checkbox" rv-checked="model.min_q.enabled"/></td>
               <td><label for="enable-min-q">Min Quantizer</label></td>
               <td><input id="min-q" type="range" 
                          min="0" max="63" 
-                         rv-enabled="model.enable_min_q" 
-                         rv-input="model.min_q"/></td>
-              <td class="value" rv-text="model.min_q"></td>
+                         rv-enabled="model.min_q.enabled" 
+                         rv-input="model.min_q.value"/></td>
+              <td class="value" rv-text="model.min_q.value"></td>
             </tr>
             <tr rv-inside="ui.max_q_inside">
-              <td><input id="enable-max-q" type="checkbox" rv-checked="model.enable_max_q"/></td>
+              <td><input id="enable-max-q" type="checkbox" rv-checked="model.max_q.enabled"/></td>
               <td><label for="enable-max-q">Max Quantizer</label></td>
               <td><input id="max-q" type="range" 
                          min="0" max="63" 
-                         rv-enabled="model.enable_max_q" 
-                         rv-input="model.max_q"/></td>
-              <td class="value" rv-text="model.max_q"></td>
+                         rv-enabled="model.max_q.enabled" 
+                         rv-input="model.max_q.value"/></td>
+              <td class="value" rv-text="model.max_q.value"></td>
             </tr>
           </table>
         </div>
@@ -270,13 +270,13 @@
         <div class="section">
           <div class="title">Tiles</div>
           <div class="body" rv-inside="ui.tiles_inside">
-            <label><input type="checkbox" rv-checked="model.enable_tiles"/>Enable</label>
-              <select rv-value="model.tile_rows" rv-enabled="model.enable_tiles">
+            <label><input type="checkbox" rv-checked="model.tiles.enabled"/>Enable</label>
+              <select rv-value="model.tiles.rows" rv-enabled="model.tiles.enabled">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">4</option>
               </select> &times;
-              <select rv-value="model.tile_cols" rv-enabled="model.enable_tiles">
+              <select rv-value="model.tiles.cols" rv-enabled="model.tiles.enabled">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">4</option>
@@ -292,12 +292,12 @@
           <div class="title">Key Frames</div>
           <div class="body">
             <div rv-inside="ui.kf_min_dist_inside">
-              <label><input type="checkbox" rv-checked="model.enable_kf_min_dist"/>Min Distance</label>
-              <input type="text" rv-enabled="model.enable_kf_min_dist" rv-input="model.kf_min_dist"/>frames
+              <label><input type="checkbox" rv-checked="model.kf_min_dist.enabled"/>Min Distance</label>
+              <input type="text" rv-enabled="model.kf_min_dist.enabled" rv-input="model.kf_min_dist.value"/>frames
             </div>
             <div rv-inside="ui.kf_max_dist_inside">
-              <label><input type="checkbox" rv-checked="model.enable_kf_max_dist"/>Max Distance</label>
-              <input type="text" rv-enabled="model.enable_kf_max_dist" rv-input="model.kf_max_dist"/>frames
+              <label><input type="checkbox" rv-checked="model.kf_max_dist.enabled"/>Max Distance</label>
+              <input type="text" rv-enabled="model.kf_max_dist.enabled" rv-input="model.kf_max_dist.value"/>frames
             </div>
           </div>
         </div>
@@ -352,13 +352,13 @@
 
 
             <div>
-              <label><input type="checkbox" rv-checked="model.input.enable_skip"/>Skip</label>
-              <input type="text" rv-input="model.input.skip" rv-enabled="model.input.enable_skip"/>frames
+              <label><input type="checkbox" rv-checked="model.input.skip.enabled"/>Skip</label>
+              <input type="text" rv-input="model.input.skip.value" rv-enabled="model.input.skip.enabled"/>frames
             </div>
 
             <div>
-              <label><input type="checkbox" rv-checked="model.input.enable_limit"/>Limit</label>
-              <input type="text" rv-input="model.input.limit" rv-enabled="model.input.enable_limit"/>frames
+              <label><input type="checkbox" rv-checked="model.input.limit.enabled"/>Limit</label>
+              <input type="text" rv-input="model.input.limit.value" rv-enabled="model.input.limit.enabled"/>frames
             </div>
 
             Source
@@ -405,8 +405,8 @@
               <input type="checkbox" rv-checked="model.frame_parallel"/>Enable frame parallel decodability
             </label>
             <div rv-inside="ui.lag_in_frames_inside">
-              <label><input type="checkbox" rv-checked="model.enable_lag_in_frames"/>Lag-in </label>
-              <input type="text" rv-enabled="model.enable_lag_in_frames" rv-input="model.lag_in_frames"/> frames
+              <label><input type="checkbox" rv-checked="model.lag_in_frames.enabled"/>Lag-in </label>
+              <input type="text" rv-enabled="model.lag_in_frames.enabled" rv-input="model.lag_in_frames.value"/> frames
             </div>
           </div>
         </div>
@@ -462,10 +462,8 @@
                        height: 480,
                        type: 'file', // 'file', 'stdin'
                        name: 'input',
-                       enable_limit: false,
-                       limit: 100,
-                       enable_skip: false,
-                       skip: 0},
+                       limit: {value: 100, enabled: false},
+                       skip: {value: 0, enabled: false}},
                output: {format: 'webm', // 'ivf', 'webm'
                         name: 'output'},
                passes: 2,            // 1, 2
@@ -482,20 +480,13 @@
                overshoot_pct: 10,
                cq_level: 10,         // 0, 1, 2, ..., 63
                aq: 0,                // 0, 1, 2, 3
-               enable_tiles: false,
-               tile_rows: 0,
-               tile_cols: 0,
+               tiles: {rows: 0, cols:0, enabled: false},
                auto_alt_ref: 1,
-               enable_kf_min_dist: false,
-               kf_min_dist: 0,
-               enable_kf_max_dist: false,
-               kf_max_dist: 9999,
-               enable_min_q: false,
-               min_q: 0,
-               enable_max_q: false,
-               max_q: 63,
-               enable_lag_in_frames: false,
-               lag_in_frames: 25
+               kf_min_dist: {value: 0, enabled: false},
+               kf_max_dist: {value: 9999, enabled: false},
+               min_q: {value: 0, enabled: false},
+               max_q: {value: 63, enabled: false},
+               lag_in_frames: {value: 25, enabled: false},
              };
 
       rivets.binders.inside = {
