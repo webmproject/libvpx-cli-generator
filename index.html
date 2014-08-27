@@ -515,10 +515,18 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="column">
+        <input id="preset-name" type="text"/><button id="save">Save</button><br/>
 
-        <button id="reset">Reset</button>
-        <button id="save">Save</button>
-        <button id="load">Load</button>
+        <table id="presets" role="presentation">
+          <tr rv-each-preset="presets">
+            <td>{ preset.name }</td>
+            <td><button class="preset-load">Load</button></td>
+            <td><button class="preset-remove">Remove</button></td>
+          </tr>
+        <table>
+        <button id="reset">Reset</button><br/>
       </div>
     </div>
     
@@ -618,17 +626,39 @@
         $.extend(true, m, mcopy);
       });
 
-      $('#save').on('click', function() {
+      
+      function savePresets(presets) {
         var storage = window.localStorage;
-        storage.setItem('data', JSON.stringify(m));
+        storage.setItem('presets', JSON.stringify(presets));
+      }
+
+      function loadPresets() {
+        var storage = window.localStorage;
+        var presets = JSON.parse(storage.getItem('presets'));
+        return presets ? presets : [];
+      }
+
+      var presets = loadPresets();
+
+      $('#presets').on('click', '.preset-load', function() {
+        var index = $(this).parent().parent().index();
+        var preset = presets[index];
+        $.extend(true, m, preset.value);
       });
 
-      $('#load').on('click', function() {
-        var storage = window.localStorage;
-        var data = storage.getItem('data');
-        if (data) {
-          $.extend(true, m, JSON.parse(data));
+      $('#presets').on('click', '.preset-remove', function() {
+        var index = $(this).parent().parent().index();
+        presets.splice(index, 1);
+        savePresets(presets);
+      });
+
+      $('#save').on('click', function() {
+        var name = $('#preset-name').val();
+        if (!name) {
+          name = 'test';
         }
+        presets.push({name:name, value:$.extend(true, {}, m)});
+        savePresets(presets);
       });
 
       rivets.binders.inside = {
@@ -679,7 +709,8 @@
 
       var view = rivets.bind($('#panel'), {
         model: m,
-        ui: ui
+        ui: ui,
+        presets: presets,
       });
 
       $('#cmd').css('visibility', 'visible');
