@@ -98,6 +98,12 @@
         width: 30px;
       }
 
+      .preset {
+        text-decoration: none;
+        border-bottom:1px dashed;
+        cursor: pointer;
+      }
+
     </style>
   </head>
   <body>
@@ -121,24 +127,24 @@
           <p rv-on-click="ui.cycle.passes"
              rv-class-selected="ui.in.passes"
              rv-inside="ui.in.passes">--passes={m.passes}</p>
-          <p rv-on-click="ui.cycle.end_usage"
-             rv-class-selected="ui.in.end_usage"
-             rv-inside="ui.in.end_usage">--end-usage={m.end_usage}</p>
-          <p data-control-id="target-bitrate"
-             rv-class-selected="ui.in.target_bitrate"
-             rv-show="m.end_usage | in vbr cbr cq"
-             rv-inside="ui.in.target_bitrate">--target-bitrate={m.target_bitrate}</p>
+          <p rv-on-click="ui.cycle.usage"
+             rv-class-selected="ui.in.usage"
+             rv-inside="ui.in.usage">--end-usage={m.usage}</p>
+          <p data-control-id="bitrate"
+             rv-class-selected="ui.in.bitrate"
+             rv-show="m.usage | in vbr cbr cq"
+             rv-inside="ui.in.bitrate">--target-bitrate={m.bitrate}</p>
           <p data-control-id="undershoot-pct"
              rv-class-selected="ui.in.undershoot_pct"
-             rv-show="m.enable_undershoot_pct"
-             rv-inside="ui.in.undershoot_pct">--undershoot-pct={m.undershoot_pct}</p>
+             rv-show="m.undershoot_pct.enabled"
+             rv-inside="ui.in.undershoot_pct">--undershoot-pct={m.undershoot_pct.value}</p>
           <p data-control-id="overshoot-pct"
              rv-class-selected="ui.in.overshoot_pct"
-             rv-show="m.enable_overshoot_pct"
-             rv-inside="ui.in.overshoot_pct">--overshoot-pct={m.overshoot_pct}</p>
+             rv-show="m.overshoot_pct.enabled"
+             rv-inside="ui.in.overshoot_pct">--overshoot-pct={m.overshoot_pct.value}</p>
           <p data-control-id="cq-level"
              rv-class-selected="ui.in.cq_level"
-             rv-show="m.end_usage | in cq q"
+             rv-show="m.usage | in cq q"
              rv-inside="ui.in.cq_level">--cq-level={m.cq_level}</p>
           <p rv-on-click="ui.cycle.quality"
              rv-inside="ui.in.speed"
@@ -200,24 +206,16 @@
 
         <div class="section">
           <div class="title">Usage</div>
-          <div class="body" rv-inside="ui.in.end_usage">
-            <label><input type="radio"
-                          name="end-usage"
-                          value="vbr"
-                          rv-checked="m.end_usage"/>VBR (Variable Bitrate)</label><br/>
-            <label><input type="radio"
-                          name="end-usage"
-                          value="cbr"
-                          rv-checked="m.end_usage"/>CBR (Constant Bitrate)</label><br/>
-            <label><input type="radio"
-                          name="end-usage"
-                          value="cq"
-                          rv-checked="m.end_usage"/>CQ (Constained Quality)</label><br/>
+          <div class="body" rv-inside="ui.in.usage">
+            <label><input type="radio" name="usage" value="vbr"
+                          rv-checked="m.usage"/>VBR (Variable Bitrate)</label><br/>
+            <label><input type="radio" name="usage" value="cbr"
+                          rv-checked="m.usage"/>CBR (Constant Bitrate)</label><br/>
+            <label><input type="radio" name="usage" value="cq"
+                          rv-checked="m.usage"/>CQ (Constained Quality)</label><br/>
 
-            <label><input type="radio"
-                          name="end-usage"
-                          value="q"
-                          rv-checked="m.end_usage"/>Q (Constant Quality)</label>
+            <label><input type="radio" name="usage" value="q"
+                          rv-checked="m.usage"/>Q (Constant Quality)</label>
           </div>
         </div>
 
@@ -235,28 +233,28 @@
         <div class="section">
           <div class="title">Rate Control</div>
           <table class="body" role="presentation">
-            <tr rv-inside="ui.in.target_bitrate">
+            <tr rv-inside="ui.in.bitrate">
               <td></td>
               <td>Bitrate</td>
-              <td><input id="target-bitrate" type="text"
-                         rv-input="m.target_bitrate"
-                         rv-enabled="m.end_usage | in vbr cbr cq"/>&nbsp;kbps</td>
+              <td><input id="bitrate" type="text"
+                         rv-input="m.bitrate"
+                         rv-enabled="m.usage | in vbr cbr cq"/>&nbsp;kbps</td>
             </tr>
             <tr rv-inside="ui.in.undershoot_pct">
               <td><input id="enable-undershoot-pct" type="checkbox"
-                         rv-checked="m.enable_undershoot_pct"/></td>
+                         rv-checked="m.undershoot_pct.enabled"/></td>
               <td><label for="enable-undershoot-pct">Undershoot</label></td>
               <td><input id="undershoot-pct" type="text"
-                         rv-input="m.undershoot_pct"
-                         rv-enabled="m.enable_undershoot_pct"/>&nbsp;%</td>
+                         rv-input="m.undershoot_pct.value"
+                         rv-enabled="m.undershoot_pct.enabled"/>&nbsp;%</td>
             </tr>
             <tr rv-inside="ui.in.overshoot_pct">
               <td><input id="enable-overshoot-pct" type="checkbox"
-                         rv-checked="m.enable_overshoot_pct"/></td>
+                         rv-checked="m.overshoot_pct.enabled"/></td>
               <td><label for="enable-overshoot-pct">Overshoot</label></td>
               <td><input id="overshoot-pct" type="text"
-                         rv-input="m.overshoot_pct"
-                         rv-enabled="m.enable_overshoot_pct"/>&nbsp;%</td>
+                         rv-input="m.overshoot_pct.value"
+                         rv-enabled="m.overshoot_pct.value"/>&nbsp;%</td>
             </tr>
           </table>
         </div>
@@ -270,7 +268,7 @@
               <td><input id="cq-level" type="range"
                          min="0" max="63"
                          rv-input="m.cq_level"
-                         rv-enabled="m.end_usage | in cq q"/></td>
+                         rv-enabled="m.usage | in cq q"/></td>
               <td class="value" rv-text="m.cq_level"/>
             </tr>
             <tr rv-inside="ui.in.min_q">
@@ -517,17 +515,25 @@
         </div>
       </div>
       <div class="column">
-        <input id="preset-name" type="text"/><button id="save">Save</button><br/>
+        <div class="section">
+          <div class="title">Builtin Presets</div>
+          <div class="body">
+            <a class="preset" id="preset-default">Default</a>
+          </div>
+        </div>
 
-        <table id="presets" role="presentation">
-          <tr rv-each-preset="presets">
-            <td>{ preset.name }</td>
-            <td><button class="preset-load">Load</button></td>
-            <td><button class="preset-remove">Remove</button></td>
-          </tr>
-        <table>
-        <button id="reset">Reset</button><br/>
+        <div class="section">
+          <div class="title">User Presets</div>
+          <div class="body" id="presets">
+            <div rv-each-preset="presets">
+              <a class="preset">{preset.name}</a>
+              <button class="preset-remove">X</button>
+            </div>
+            <button id="preset-add">Add Preset</button>
+          </div>
+        </div>
       </div>
+      
     </div>
     
     <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -546,8 +552,8 @@
       var ui = {
         in: {
           passes: false,
-          end_usage: false,
-          target_bitrate: false,
+          usage: false,
+          bitrate: false,
           undershoot_pct: false,
           overshoot_pct: false,
           cq_level: false,
@@ -577,7 +583,7 @@
         },
         cycle: {
           passes: getParamCycle('passes', [1, 2]),
-          end_usage: getParamCycle('end_usage', ['vbr', 'cbr', 'cq', 'q']),
+          usage: getParamCycle('usage', ['vbr', 'cbr', 'cq', 'q']),
           quality: getParamCycle('quality', ['rt', 'good', 'best']),
         }
       };
@@ -599,14 +605,12 @@
                         type: 'file', //  'file', 'stdout'
                         name: 'output'},
                passes: 2,            // 1, 2
-               end_usage: 'vbr',     // 'vbr', 'cbr', 'cq', 'q'
+               usage: 'vbr',     // 'vbr', 'cbr', 'cq', 'q'
                quality: 'good',      // 'rt', 'good', 'best'
                speed: 1,             // 0, 1, 2, 3, ..., 10
-               target_bitrate: 600,  // > 0
-               enable_undershoot_pct: false,
-               undershoot_pct: 10,
-               enable_overshoot_pct: false,
-               overshoot_pct: 10,
+               bitrate: 600,  // > 0
+               undershoot_pct: {value: 10, enabled: false},
+               overshoot_pct: {value: 10, enabled: false},
                cq_level: 10,         // 0, 1, 2, ..., 63
                aq: 0,                // 0, 1, 2, 3
                tiles: {rows: 0, cols:0, enabled: false},
@@ -620,13 +624,6 @@
                fps: {num:30, den:1, enabled:false},
              };
 
-      var mcopy = $.extend(true, {}, m);
-
-      $('#reset').on('click', function() {
-        $.extend(true, m, mcopy);
-      });
-
-      
       function savePresets(presets) {
         var storage = window.localStorage;
         storage.setItem('presets', JSON.stringify(presets));
@@ -638,27 +635,49 @@
         return presets ? presets : [];
       }
 
+      function generatePresetName(m) {
+        name = '';
+        name += m.passes == 1 ? 'one-pass' : 'two-pass';
+        name += '-' + m.usage;
+        name += '-' + m.quality;
+        if (m.quality != 'best') {
+          name += m.speed;
+        }
+        if (m.usage != 'q') {
+          name += '-' + m.bitrate + 'kbps';
+        }
+        if (m.usage == 'cq' || m.usage == 'q') {
+          name += '-q' + m.cq_level;
+        }
+        return name;
+      }
+
       var presets = loadPresets();
 
-      $('#presets').on('click', '.preset-load', function() {
-        var index = $(this).parent().parent().index();
+      var defaultPreset = $.extend(true, {}, m);
+
+      $('#preset-default').on('click', function() {
+        $.extend(true, m, defaultPreset);
+      });
+
+      $('#presets').on('click', '.preset', function() {
+        var index = $(this).parent().index();
         var preset = presets[index];
         $.extend(true, m, preset.value);
       });
 
       $('#presets').on('click', '.preset-remove', function() {
-        var index = $(this).parent().parent().index();
+        var index = $(this).parent().index();
         presets.splice(index, 1);
         savePresets(presets);
       });
 
-      $('#save').on('click', function() {
-        var name = $('#preset-name').val();
-        if (!name) {
-          name = 'test';
+      $('#preset-add').on('click', function() {
+        var name = prompt("Preset Name", generatePresetName(m));
+        if (name) {
+          presets.push({name:name, value:$.extend(true, {}, m)});
+          savePresets(presets);  
         }
-        presets.push({name:name, value:$.extend(true, {}, m)});
-        savePresets(presets);
       });
 
       rivets.binders.inside = {
@@ -725,7 +744,7 @@
         .on('mouseleave', function (event) {
           textControl = null;
         });
-      
+
       var rangeControl = null;
 
       $('#panel input[type=range]')
