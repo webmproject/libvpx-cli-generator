@@ -124,12 +124,12 @@
              rv-show="m.quiet">--quiet</p>
           <p rv-class-selected="ui.frame_parallel"
              rv-show="m.frame_parallel">--frame-parallel</p>
-          <p rv-on-click="ui.cycle.passes"
-             rv-class-selected="ui.in.passes"
-             rv-inside="ui.in.passes">--passes={m.passes}</p>
-          <p rv-on-click="ui.cycle.usage"
-             rv-class-selected="ui.in.usage"
-             rv-inside="ui.in.usage">--end-usage={m.usage}</p>
+          <p rv-class-selected="ui.in.passes"
+             rv-inside="ui.in.passes"
+             rv-on-click="ui.cycle.passes">--passes={m.passes}</p>
+          <p rv-class-selected="ui.in.usage"
+             rv-inside="ui.in.usage"
+             rv-on-click="ui.cycle.usage">--end-usage={m.usage}</p>
           <p data-control-id="bitrate"
              rv-class-selected="ui.in.bitrate"
              rv-show="m.usage | in vbr cbr cq"
@@ -146,9 +146,13 @@
              rv-class-selected="ui.in.cq_level"
              rv-show="m.usage | in cq q"
              rv-inside="ui.in.cq_level">--cq-level={m.cq_level}</p>
-          <p rv-on-click="ui.cycle.quality"
+          <p rv-class-selected="ui.in.quality"
+             rv-inside="ui.in.quality"
+             rv-on-click="ui.cycle.quality">--{m.quality}</p>
+          <p rv-class-selected="ui.in.speed"
+             rv-show="m.quality | in rt good"
              rv-inside="ui.in.speed"
-             rv-class-selected="ui.in.speed">--{m.quality} <span rv-show="m.quality | in rt good">--cpu-used={m.speed}</span></p>
+             rv-on-click="ui.cycle.speed">--cpu-used={m.speed}</p>
           <p rv-class-selected="ui.in.kf_min_dist"
              rv-show="m.kf_min_dist.enabled">--kf-min-dist={m.kf_min_dist.value}</p>
           <p rv-class-selected="ui.in.kf_max_dist"
@@ -213,7 +217,6 @@
                           rv-checked="m.usage"/>CBR (Constant Bitrate)</label><br/>
             <label><input type="radio" name="usage" value="cq"
                           rv-checked="m.usage"/>CQ (Constained Quality)</label><br/>
-
             <label><input type="radio" name="usage" value="q"
                           rv-checked="m.usage"/>Q (Constant Quality)</label>
           </div>
@@ -221,12 +224,16 @@
 
         <div class="section">
           <div class="title">Speed</div>
-          <div class="body" rv-inside="ui.in.speed">
-            <label><input type="radio" name="quality" value="rt" rv-checked="m.quality"/>Real Time</label>
-            <label><input type="radio" name="quality" value="good" rv-checked="m.quality"/>Good</label>
-            <label><input type="radio" name="quality" value="best" rv-checked="m.quality"/>Best</label><br/>
-            <input type="range" min="0" max="10" rv-input="m.speed" rv-enabled="m.quality | in rt good"/>
-            <span class="value" rv-text="m.speed"></span>
+          <div class="body">
+            <div rv-inside="ui.in.quality">
+              <label><input type="radio" name="quality" value="rt" rv-checked="m.quality"/>Real Time</label>
+              <label><input type="radio" name="quality" value="good" rv-checked="m.quality"/>Good</label>
+              <label><input type="radio" name="quality" value="best" rv-checked="m.quality"/>Best</label>
+            </div>
+            <div rv-inside="ui.in.speed">
+              <input type="range" min="0" max="10" rv-input="m.speed" rv-enabled="m.quality | in rt good"/>
+              <span class="value" rv-text="m.speed"></span>
+            </div>
           </div>
         </div>
 
@@ -544,7 +551,7 @@
     <script>
       function getParamCycle(param, values) {
         return function(event, models) {
-          var model = models.model;
+          var model = models.m;
           model[param] = values[($.inArray(model[param], values) + 1) % values.length];
         };
       }
@@ -557,6 +564,7 @@
           undershoot_pct: false,
           overshoot_pct: false,
           cq_level: false,
+          quality: false,
           speed: false,
           aq: false,
           tiles: false,
@@ -585,6 +593,7 @@
           passes: getParamCycle('passes', [1, 2]),
           usage: getParamCycle('usage', ['vbr', 'cbr', 'cq', 'q']),
           quality: getParamCycle('quality', ['rt', 'good', 'best']),
+          speed: getParamCycle('speed', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
         }
       };
 
@@ -798,8 +807,12 @@
 
       var client = new ZeroClipboard($('#cmd-copy'));
       client.on('copy', function(event) {
-        //var cmd = $('#cmd').children(":visible").text(); //.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").trim();
-        var cmd = $('#cmd-line').children(":visible").map(function(){ return $(this).text() }).get().join(' ').replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").trim();
+        var cmd = $('#cmd-line').children(":visible")
+                                .map(function(){ return $(this).text() })
+                                .get().join(' ')
+                                .replace(/(\r\n|\n|\r)/gm," ")
+                                .replace(/\s+/g," ")
+                                .trim();
         console.log(cmd);
         var clipboard = event.clipboardData;
         clipboard.setData("text/plain", cmd);
