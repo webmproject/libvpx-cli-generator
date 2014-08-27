@@ -21,6 +21,11 @@
         cursor: pointer; 
       }
 
+      .column {
+        float: left;
+        margin-left:40px;
+      }
+
       .section {
         margin-bottom: 5px;
         margin-left: 10px;
@@ -165,7 +170,7 @@
         </div>
       </div>
 
-      <div style="float:left">
+      <div class="column">
         <div class="section">
           <div class="title">Passes</div>
           <div class="body" rv-inside="ui.in.passes">
@@ -301,6 +306,9 @@
           </div> 
         </div>
 
+      </div>
+
+      <div class="column">
         <div class="section">
           <div class="title">Key Frames</div>
           <table role="presenetation" class="body">
@@ -349,9 +357,38 @@
             </table>
           </div>
         </div>
+        <div class="section">
+          <div class="title">Miscellaneous</div>
+          <div class="body">
+            <label rv-inside="ui.in.debug">
+              <input type="checkbox" rv-checked="model.debug"/>Debug mode
+            </label><br/>
+            <label rv-inside="ui.in.verbose">
+              <input type="checkbox" rv-checked="model.verbose"/>Show encoder paramters
+            </label><br/>
+            <label rv-inside="ui.in.psnr">
+              <input type="checkbox" rv-checked="model.psnr"/>Show PSNR in status line
+            </label><br/>
+            <label rv-inside="ui.in.quiet">
+              <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
+            </label><br/>
+            <label rv-inside="ui.parallel.frame">
+              <input type="checkbox" rv-checked="model.frame_parallel"/>Enable frame parallel decodability
+            </label>
+            <div rv-inside="ui.in.lag_in_frames">
+              <label><input type="checkbox" rv-checked="model.lag_in_frames.enabled"/>Lag-in</label>
+              <input type="text" rv-enabled="model.lag_in_frames.enabled" rv-input="model.lag_in_frames.value"/> frames
+            </div>
+            <div rv-inside="ui.in.fps">
+              <label><input type="checkbox" rv-checked="model.fps.enabled"/>FPS</label>
+              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.num"/> /
+              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.den"/>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div style="float:left;margin-left:40px">
+      <div class="column">
         <div class="section">
           <div class="title">Input</div>
           <div class="body">
@@ -451,35 +488,7 @@
             </div>
           </div>
         </div>
-        <div class="section">
-          <div class="title">Miscellaneous</div>
-          <div class="body">
-            <label rv-inside="ui.in.debug">
-              <input type="checkbox" rv-checked="model.debug"/>Debug mode
-            </label><br/>
-            <label rv-inside="ui.in.verbose">
-              <input type="checkbox" rv-checked="model.verbose"/>Show encoder paramters
-            </label><br/>
-            <label rv-inside="ui.in.psnr">
-              <input type="checkbox" rv-checked="model.psnr"/>Show PSNR in status line
-            </label><br/>
-            <label rv-inside="ui.in.quiet">
-              <input type="checkbox" rv-checked="model.quiet"/>Do not print encode progress
-            </label><br/>
-            <label rv-inside="ui.parallel.frame">
-              <input type="checkbox" rv-checked="model.frame_parallel"/>Enable frame parallel decodability
-            </label>
-            <div rv-inside="ui.in.lag_in_frames">
-              <label><input type="checkbox" rv-checked="model.lag_in_frames.enabled"/>Lag-in</label>
-              <input type="text" rv-enabled="model.lag_in_frames.enabled" rv-input="model.lag_in_frames.value"/> frames
-            </div>
-            <div rv-inside="ui.in.fps">
-              <label><input type="checkbox" rv-checked="model.fps.enabled"/>FPS</label>
-              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.num"/> /
-              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.den"/>
-            </div>
-          </div>
-        </div>
+
         <button id="reset">Reset</button>
         <button id="save">Save</button>
         <button id="load">Load</button>
