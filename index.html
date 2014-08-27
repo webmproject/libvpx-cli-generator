@@ -3,7 +3,7 @@
   <head>
     <title>libvpx cli generator</title>
     <style type="text/css">
-      html, body {
+      html, body, table, tr, td {
         margin: 0;
         padding: 0;
         border: 0;
@@ -13,12 +13,10 @@
         vertical-align:middle;
       }
 
-      input[type='radio'] {
-        cursor: pointer; 
-      }
-
-      label { 
-        cursor: pointer; 
+      input[type='radio'],
+      input[type='checkbox'],
+      label {
+        cursor: pointer;
       }
 
       .column {
@@ -31,12 +29,25 @@
         margin-left: 10px;
       }
 
-      .section .title {
+      .section > .title {
         font-weight: bold;
       }
 
-      .section .body {
-        margin-left: 5px;
+      .section > .body {
+        margin-left: 10px;
+      }
+
+
+      .subsection {
+
+      }
+
+      .subsection > .title {
+        text-decoration: underline; 
+      }
+
+      .subsection > .body {
+        margin-left: 10px;
       }
 
       .selected {
@@ -79,6 +90,14 @@
         cursor: pointer;
       }
 
+      #width, #height {
+        width: 40px;
+      }
+
+      #fps-num, #fps-den {
+        width: 30px;
+      }
+
     </style>
   </head>
   <body>
@@ -86,7 +105,7 @@
       <div id="cmd" style="visibility:hidden">
         <button style="float:left" id="cmd-copy">Copy</button>
         <div style="float:clear" id="cmd-line">
-          <p>vpxenc --codec=vp9</p>
+          <p>vpxenc --codec={model.codec}</p>
           <p rv-class-selected="ui.in.lag_in_frames"
              rv-show="model.lag_in_frames.enabled">--lag-in-frames={model.lag_in_frames.value}</p>
           <p rv-class-selected="ui.in.debug"
@@ -145,12 +164,12 @@
              rv-show="model.tiles.enabled">--tile-rows={model.tiles.rows} --tile-cols={model.tiles.cols}</p>
           <p rv-class-selected="ui.in.aq"
              rv-show="model.aq | in 1 2 3">--aq-mode={model.aq}</p>
-          <p rv-show="model.input.skip.enabled"
-             rv-class-selected="ui.in.input.skip">--skip={model.input.skip.value}</p>
-          <p rv-show="model.input.limit.enabled"
-             rv-class-selected="ui.in.input.limit">--limit={model.input.limit.value}</p>
-          <p rv-show="model.fps.enabled"
-             rv-class-selected="ui.in.fps">--fps={model.fps.num}/{model.fps.den}</p>
+          <p rv-class-selected="ui.in.input.skip"
+             rv-show="model.input.skip.enabled">--skip={model.input.skip.value}</p>
+          <p rv-class-selected="ui.in.input.limit"
+             rv-show="model.input.limit.enabled">--limit={model.input.limit.value}</p>
+          <p rv-class-selected="ui.in.fps"
+             rv-show="model.fps.enabled">--fps={model.fps.num}/{model.fps.den}</p>
 
           <p rv-show="model.input.format | in i420 i422 i444 yv12"
              rv-class-selected="ui.in.input.format">--{model.input.format}</p>
@@ -335,26 +354,27 @@
             <div rv-inside="ui.in.arf.enabled">
               <label><input type="checkbox" rv-checked="model.arf.enabled"/>Enable</label>
             </div>
-
-            Temporal Noise Reduction
-            <table class="indent">
-              <tr rv-inside="ui.in.arf.nr.frames">
-                <td>Frames</td>
-                <td><input type="range"
-                           min="0" max="15"
-                           rv-enabled="model.arf.enabled"
-                           rv-input="model.arf.nr.frames"/></td>
-                <td class="value" rv-text="model.arf.nr.frames"/>
-              </tr>
-              <tr rv-inside="ui.in.arf.nr.strength">
-                <td>Strength</td>
-                <td><input type="range"
-                           min="0" max="6"
-                           rv-enabled="model.arf.enabled"
-                           rv-input="model.arf.nr.strength"/></td>
-                <td class="value" rv-text="model.arf.nr.strength"/>
-              </tr>
-            </table>
+            <div class="subsection">
+              <div class="title">Temporal Noise Reduction</div>
+              <table class="body">
+                <tr rv-inside="ui.in.arf.nr.frames">
+                  <td>Frames</td>
+                  <td><input type="range"
+                             min="0" max="15"
+                             rv-enabled="model.arf.enabled"
+                             rv-input="model.arf.nr.frames"/></td>
+                  <td class="value" rv-text="model.arf.nr.frames"/>
+                </tr>
+                <tr rv-inside="ui.in.arf.nr.strength">
+                  <td>Strength</td>
+                  <td><input type="range"
+                             min="0" max="6"
+                             rv-enabled="model.arf.enabled"
+                             rv-input="model.arf.nr.strength"/></td>
+                  <td class="value" rv-text="model.arf.nr.strength"/>
+                </tr>
+              </table>
+            </div>
           </div>
         </div>
         <div class="section">
@@ -379,11 +399,6 @@
               <label><input type="checkbox" rv-checked="model.lag_in_frames.enabled"/>Lag-in</label>
               <input type="text" rv-enabled="model.lag_in_frames.enabled" rv-input="model.lag_in_frames.value"/> frames
             </div>
-            <div rv-inside="ui.in.fps">
-              <label><input type="checkbox" rv-checked="model.fps.enabled"/>FPS</label>
-              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.num"/> /
-              <input style="width:30px" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.den"/>
-            </div>
           </div>
         </div>
       </div>
@@ -392,59 +407,7 @@
         <div class="section">
           <div class="title">Input</div>
           <div class="body">
-
-            Format
-            <div class="indent">
-              <label><input type="radio"
-                            name="input-format"
-                            value="y4m"
-                            rv-checked="model.input.format"/>Y4M</label><br/>
-              <div>
-                <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px"
-                     rv-inside="ui.in.input.format">
-                  <label><input type="radio"
-                                name="input-format"
-                                value="i420"
-                                rv-checked="model.input.format"/>YUV 4:2:0</label><br/>
-                  <label><input type="radio"
-                                name="input-format"
-                                value="i422"
-                                rv-checked="model.input.format"/>YUV 4:2:2</label><br/>
-                  <label><input type="radio"
-                                name="input-format"
-                                value="i444"
-                                rv-checked="model.input.format"/>YUV 4:4:4</label><br/>
-                  <label><input type="radio"
-                                name="input-format"
-                                value="yv12"
-                                rv-checked="model.input.format"/>YV12</label>
-                </div>
-
-                <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px"
-                     rv-inside="ui.in.input.size">
-                  <input style="width:40px" type="text"
-                         rv-input="model.input.width"
-                         rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times;
-                  <input style="width:40px" type="text"
-                         rv-input="model.input.height"
-                         rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
-                </div>
-
-                <div style="clear:both"></div>
-              </div>
-            </div>
-
-            Source
-            <div class="indent" rv-inside="ui.in.input.src">
-              <label><input type="radio" name="input-type" value="file"
-                            rv-checked="model.input.type"/>File</label>
-                <input type="text" rv-input="model.input.name"/><br/>
-              <label><input type="radio" name="input-type" value="stdin"
-                            rv-checked="model.input.type"/>STDIN</label><br/>
-            </div>
-
-            Frames
-            <table role="presentation" class="indent">
+            <table role="presentation">
               <tr rv-inside="ui.in.input.skip">
                 <td><input id="enable-skip" type="checkbox" rv-checked="model.input.skip.enabled"/></td>
                 <td><label for="enable-skip">Skip</label></td>
@@ -460,31 +423,95 @@
                            rv-input="model.input.limit.value" 
                            rv-enabled="model.input.limit.enabled"/>&nbsp;frames</td>
               </tr>
+              <tr rv-inside="ui.in.fps">
+                <td><input id="enable-fps" type="checkbox" rv-checked="model.fps.enabled"/></td>
+                <td><label for="enable-fps">FPS</label></td>
+                <td><input id="fps-num" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.num"/> /
+                    <input id="fps-den" type="text" rv-enabled="model.fps.enabled" rv-input="model.fps.den"/></td>
+              </tr>
             </table>
+
+            <div class="subsection">
+              <div class="title">Format</div>
+              <div class="body">
+                <label><input type="radio"
+                              name="input-format"
+                              value="y4m"
+                              rv-checked="model.input.format"/>Y4M</label><br/>
+                <div>
+                  <div style="float:left;width:45%;overflow:hidden;padding:0;margin:0px;border-right:solid black 1px"
+                       rv-inside="ui.in.input.format">
+                    <label><input type="radio"
+                                  name="input-format"
+                                  value="i420"
+                                  rv-checked="model.input.format"/>YUV 4:2:0</label><br/>
+                    <label><input type="radio"
+                                  name="input-format"
+                                  value="i422"
+                                  rv-checked="model.input.format"/>YUV 4:2:2</label><br/>
+                    <label><input type="radio"
+                                  name="input-format"
+                                  value="i444"
+                                  rv-checked="model.input.format"/>YUV 4:4:4</label><br/>
+                    <label><input type="radio"
+                                  name="input-format"
+                                  value="yv12"
+                                  rv-checked="model.input.format"/>YV12</label>
+                  </div>
+
+                  <div style="float:left;width:50%;overflow:hidden;margin-left:5px;margin-left:5px;margin-top:25px"
+                       rv-inside="ui.in.input.size">
+                    <input id="width" type="text"
+                           rv-input="model.input.width"
+                           rv-enabled="model.input.format | in i420 i422 i444 yv12"/> &times;
+                    <input id="height" type="text"
+                           rv-input="model.input.height"
+                           rv-enabled="model.input.format | in i420 i422 i444 yv12"/>
+                  </div>
+
+                  <div style="clear:both"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="subsection">
+              <div class="title">Source</div>
+              <div class="body" rv-inside="ui.in.input.src">
+                <label><input type="radio" name="input-type" value="file"
+                              rv-checked="model.input.type"/>File</label>
+                  <input type="text" rv-input="model.input.name"/><br/>
+                <label><input type="radio" name="input-type" value="stdin"
+                              rv-checked="model.input.type"/>STDIN</label><br/>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="section">
           <div class="title">Output</div>
           <div class="body">
-            Format
-            <div class="indent" rv-inside="ui.in.output_format">
-              <label><input type="radio"
-                            name="output_format"
-                            value="webm"
-                            rv-checked="model.output.format"/>WebM</label><br/>
-              <label><input type="radio"
-                            name="output_format"
-                            value="ivf"
-                            rv-checked="model.output.format"/>IVF</label>
+            <div class="subsection">
+              <div class="title">Format</div>
+              <div class="body" rv-inside="ui.in.output_format">
+                <label><input type="radio"
+                              name="output_format"
+                              value="webm"
+                              rv-checked="model.output.format"/>WebM</label><br/>
+                <label><input type="radio"
+                              name="output_format"
+                              value="ivf"
+                              rv-checked="model.output.format"/>IVF</label>
+              </div>
             </div>
-            Destination
-            <div class="indent" rv-inside="ui.in.output_dst">
-              <label><input type="radio" name="output-type" value="file"
-                            rv-checked="model.output.type"/>File</label>
-                <input type="text" rv-input="model.output.name"/><br/>
-              <label><input type="radio" name="output-type" value="stdout"
-                            rv-checked="model.output.type"/>STDOUT</label>
+            <div class="subsection">
+              <div class="title">Destination</div>
+              <div class="body" rv-inside="ui.in.output_dst">
+                <label><input type="radio" name="output-type" value="file"
+                              rv-checked="model.output.type"/>File</label>
+                  <input type="text" rv-input="model.output.name"/><br/>
+                <label><input type="radio" name="output-type" value="stdout"
+                              rv-checked="model.output.type"/>STDOUT</label>
+              </div>
             </div>
           </div>
         </div>
