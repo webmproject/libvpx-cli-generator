@@ -180,16 +180,16 @@
              rv-show="m.input.limit.enabled">--limit={m.input.limit.value}</p>
           <p rv-class-selected="ui.in.fps"
              rv-show="m.fps.enabled">--fps={m.fps.num}/{m.fps.den}</p>
-
           <p rv-show="m.input.format | in i420 i422 i444 yv12"
-             rv-class-selected="ui.in.input.format">--{m.input.format}</p>
+             rv-class-selected="ui.in.input.format"
+             rv-inside="ui.in.input.format">--{m.input.format}</p>
           <p rv-show="m.input.format | in i420 i422 i444 yv12"
-             rv-class-selected="ui.in.input.size">--width={m.input.width} --height={m.input.height}</p>
+             rv-class-selected="ui.in.input.size"
+             rv-inside="ui.in.input.size">--width={m.input.width} --height={m.input.height}</p>
           <p rv-show="m.input.type | eq file"
-             rv-class-selected="ui.in.input.src">{m.input.name}<span rv-show="m.input.format | in i420 i422 i444 yv12">.yuv</span><span rv-show="m.input.format | in y4m">.y4m</span></p>
+             rv-class-selected="ui.in.input.src">{m.input.name}.{m.input.format | extension}</p>
           <p rv-show="m.input.type | eq stdin"
              rv-class-selected="ui.in.input.src">-</p>
-
           <p rv-show="m.output.format | eq ivf"
              rv-class-selected="ui.in.output_format">--ivf</p>
           <p rv-show="m.output.type | eq file"
@@ -722,6 +722,14 @@
           $(el).off('input change', this.publish);
         }
       };
+
+      rivets.formatters.extension = function (value) {
+        if (value == 'i420' || value == 'i422' || value ==  'i444' || value == 'yv12') {
+          return 'yuv'
+        } else {
+          return 'y4m'
+        }
+      }
 
       rivets.formatters.bool = function(value){
         return value ? 1 : 0;
