@@ -30,6 +30,7 @@
       }
 
       .section > .title {
+        font-family: arial;
         font-weight: bold;
       }
 
@@ -39,11 +40,11 @@
 
 
       .subsection {
-
+        margin-bottom: 5px;
       }
 
       .subsection > .title {
-        text-decoration: underline; 
+
       }
 
       .subsection > .body {
@@ -115,14 +116,19 @@
           <p rv-class-selected="ui.in.lag_in_frames"
              rv-show="m.lag_in_frames.enabled">--lag-in-frames={m.lag_in_frames.value}</p>
           <p rv-class-selected="ui.in.debug"
+             rv-inside="ui.in.debug"
              rv-show="m.debug">--debug</p>
           <p rv-class-selected="ui.in.verbose"
+             rv-inside="ui.in.verbose"
              rv-show="m.verbose">--verbose</p>
           <p rv-class-selected="ui.in.psnr"
+             rv-inside="ui.in.psnr"
              rv-show="m.psnr">--psnr</p>
           <p rv-class-selected="ui.in.quiet"
+             rv-inside="ui.in.quiet"
              rv-show="m.quiet">--quiet</p>
           <p rv-class-selected="ui.frame_parallel"
+             rv-inside="m.frame_parallel"
              rv-show="m.frame_parallel">--frame-parallel</p>
           <p rv-class-selected="ui.in.passes"
              rv-inside="ui.in.passes"
@@ -130,72 +136,90 @@
           <p rv-class-selected="ui.in.usage"
              rv-inside="ui.in.usage"
              rv-on-click="ui.cycle.usage">--end-usage={m.usage}</p>
-          <p data-control-id="bitrate"
-             rv-class-selected="ui.in.bitrate"
+          <p rv-class-selected="ui.in.bitrate"
+             rv-inside="ui.in.bitrate"
              rv-show="m.usage | in vbr cbr cq"
-             rv-inside="ui.in.bitrate">--target-bitrate={m.bitrate}</p>
-          <p data-control-id="undershoot-pct"
-             rv-class-selected="ui.in.undershoot_pct"
+             data-control-id="bitrate">--target-bitrate={m.bitrate}</p>
+          <p rv-class-selected="ui.in.undershoot_pct"
+             rv-inside="ui.in.undershoot_pct"
              rv-show="m.undershoot_pct.enabled"
-             rv-inside="ui.in.undershoot_pct">--undershoot-pct={m.undershoot_pct.value}</p>
-          <p data-control-id="overshoot-pct"
-             rv-class-selected="ui.in.overshoot_pct"
+             data-control-id="undershoot-pct">--undershoot-pct={m.undershoot_pct.value}</p>
+          <p rv-class-selected="ui.in.overshoot_pct"
+             rv-inside="ui.in.overshoot_pct"
              rv-show="m.overshoot_pct.enabled"
-             rv-inside="ui.in.overshoot_pct">--overshoot-pct={m.overshoot_pct.value}</p>
-          <p data-control-id="cq-level"
-             rv-class-selected="ui.in.cq_level"
+             data-control-id="overshoot-pct">--overshoot-pct={m.overshoot_pct.value}</p>
+          <p rv-class-selected="ui.in.cq_level"
+             rv-inside="ui.in.cq_level"
              rv-show="m.usage | in cq q"
-             rv-inside="ui.in.cq_level">--cq-level={m.cq_level}</p>
+             data-control-id="cq-level">--cq-level={m.cq_level}</p>
           <p rv-class-selected="ui.in.quality"
              rv-inside="ui.in.quality"
              rv-on-click="ui.cycle.quality">--{m.quality}</p>
           <p rv-class-selected="ui.in.speed"
-             rv-show="m.quality | in rt good"
              rv-inside="ui.in.speed"
-             rv-on-click="ui.cycle.speed">--cpu-used={m.speed}</p>
+             rv-show="m.quality | in rt good"
+             rv-on-click="ui.cycle.speed"
+             data-control-id="speed">--cpu-used={m.speed}</p>
           <p rv-class-selected="ui.in.kf_min_dist"
+             rv-inside="ui.in.kf_min_dist"
              rv-show="m.kf_min_dist.enabled">--kf-min-dist={m.kf_min_dist.value}</p>
           <p rv-class-selected="ui.in.kf_max_dist"
+             rv-inside="ui.in.kf_max_dist"
              rv-show="m.kf_max_dist.enabled">--kf-max-dist={m.kf_max_dist.value}</p>
-          <p data-control-id="min-q"
-             rv-class-selected="ui.in.min_q"
+          <p rv-class-selected="ui.in.min_q"
+             rv-inside="ui.in.min_q"
              rv-show="m.min_q.enabled"
-             rv-inside="ui.in.min_q">--min-q={m.min_q.value}</p>
-          <p data-control-id="max-q"
-             rv-class-selected="ui.in.max_q"
+             data-control-id="min-q">--min-q={m.min_q.value}</p>
+          <p rv-class-selected="ui.in.max_q"
+             rv-inside="ui.in.max_q"
              rv-show="m.max_q.enabled"
-             rv-inside="ui.in.max_q">--max-q={m.max_q.value}</p>
-          <p rv-class-selected="ui.in.arf.enabled">--auto-alt-ref={m.arf.enabled | bool}</p>
+             data-control-id="max-q">--max-q={m.max_q.value}</p>
+          <p rv-class-selected="ui.in.arf.enabled"
+             rv-inside="ui.in.arf.enabled">--auto-alt-ref={m.arf.enabled | bool}</p>
           <p rv-class-selected="ui.in.arf.nr.frames"
-             rv-show="m.arf.enabled">--arnr-maxframes={m.arf.nr.frames}</p>
+             rv-inside="ui.in.arf.nr.frames"
+             rv-show="m.arf.enabled"
+             data-control-id="arf-nr-frames">--arnr-maxframes={m.arf.nr.frames}</p>
           <p rv-class-selected="ui.in.arf.nr.strength"
-             rv-show="m.arf.enabled">--arnr-strength={m.arf.nr.strength}</p>
+             rv-inside="ui.in.arf.nr.strength"
+             rv-show="m.arf.enabled"
+             data-control-id="arf-nr-strength">--arnr-strength={m.arf.nr.strength}</p>
           <p rv-class-selected="ui.in.tiles"
+             rv-inside="ui.in.tiles"
              rv-show="m.tiles.enabled">--tile-rows={m.tiles.rows} --tile-cols={m.tiles.cols}</p>
           <p rv-class-selected="ui.in.aq"
+             rv-inside="ui.in.aq"
              rv-show="m.aq | in 1 2 3">--aq-mode={m.aq}</p>
           <p rv-class-selected="ui.in.input.skip"
+             rv-inside="ui.in.input.skip"
              rv-show="m.input.skip.enabled">--skip={m.input.skip.value}</p>
           <p rv-class-selected="ui.in.input.limit"
+             rv-inside="ui.in.input.limit"
              rv-show="m.input.limit.enabled">--limit={m.input.limit.value}</p>
           <p rv-class-selected="ui.in.fps"
+             rv-inside="ui.in.fps"
              rv-show="m.fps.enabled">--fps={m.fps.num}/{m.fps.den}</p>
-          <p rv-show="m.input.format | in i420 i422 i444 yv12"
-             rv-class-selected="ui.in.input.format"
-             rv-inside="ui.in.input.format">--{m.input.format}</p>
-          <p rv-show="m.input.format | in i420 i422 i444 yv12"
-             rv-class-selected="ui.in.input.size"
-             rv-inside="ui.in.input.size">--width={m.input.width} --height={m.input.height}</p>
-          <p rv-show="m.input.type | eq file"
-             rv-class-selected="ui.in.input.src">{m.input.name}.{m.input.format | extension}</p>
-          <p rv-show="m.input.type | eq stdin"
-             rv-class-selected="ui.in.input.src">-</p>
-          <p rv-show="m.output.format | eq ivf"
-             rv-class-selected="ui.in.output_format">--ivf</p>
-          <p rv-show="m.output.type | eq file"
-             rv-class-selected="ui.in.output_dst">-o {m.output.name}.{m.output.format}</p>
-          <p rv-show="m.output.type | eq stdout"
-             rv-class-selected="ui.in.output_dst">-o -</p>
+          <p rv-class-selected="ui.in.input.format"
+             rv-inside="ui.in.input.format"
+             rv-show="m.input.format | in i420 i422 i444 yv12">--{m.input.format}</p>
+          <p rv-class-selected="ui.in.input.size"
+             rv-inside="ui.in.input.size"
+             rv-show="m.input.format | in i420 i422 i444 yv12">--width={m.input.width} --height={m.input.height}</p>
+          <p rv-class-selected="ui.in.input.src"
+             rv-inside="ui.in.input.src"
+             rv-show="m.input.type | eq file">{m.input.name}.{m.input.format | extension}</p>
+          <p rv-class-selected="ui.in.input.src"
+             rv-inside="ui.in.input.src"
+             rv-show="m.input.type | eq stdin">-</p>
+          <p rv-class-selected="ui.in.output_format"
+             rv-inside="ui.in.output_format"
+             rv-show="m.output.format | eq ivf">--ivf</p>
+          <p rv-class-selected="ui.in.output_dst"
+             rv-inside="ui.in.output_dst"
+             rv-show="m.output.type | eq file">-o {m.output.name}.{m.output.format}</p>
+          <p rv-class-selected="ui.in.output_dst"
+             rv-inside="ui.in.output_dst"
+             rv-show="m.output.type | eq stdout">-o -</p>
         </div>
       </div>
 
@@ -231,7 +255,8 @@
               <label><input type="radio" name="quality" value="best" rv-checked="m.quality"/>Best</label>
             </div>
             <div rv-inside="ui.in.speed">
-              <input type="range" min="0" max="10" rv-input="m.speed" rv-enabled="m.quality | in rt good"/>
+              <input id="speed" type="range" min="0" max="10" 
+                     rv-input="m.speed" rv-enabled="m.quality | in rt good"/>
               <span class="value" rv-text="m.speed"></span>
             </div>
           </div>
@@ -268,44 +293,46 @@
 
         <div class="section">
           <div class="title">Quantization</div>
-          <table class="body" role="presentation">
-            <tr rv-inside="ui.in.cq_level">
-              <td></td>
-              <td>Main Quantizer</td>
-              <td><input id="cq-level" type="range"
-                         min="0" max="63"
-                         rv-input="m.cq_level"
-                         rv-enabled="m.usage | in cq q"/></td>
-              <td class="value" rv-text="m.cq_level"/>
-            </tr>
-            <tr rv-inside="ui.in.min_q">
-              <td><input id="enable-min-q" type="checkbox" rv-checked="m.min_q.enabled"/></td>
-              <td><label for="enable-min-q">Min Quantizer</label></td>
-              <td><input id="min-q" type="range" 
-                         min="0" max="63"
-                         rv-enabled="m.min_q.enabled"
-                         rv-input="m.min_q.value"/></td>
-              <td class="value" rv-text="m.min_q.value"/>
-            </tr>
-            <tr rv-inside="ui.in.max_q">
-              <td><input id="enable-max-q" type="checkbox" rv-checked="m.max_q.enabled"/></td>
-              <td><label for="enable-max-q">Max Quantizer</label></td>
-              <td><input id="max-q" type="range"
-                         min="0" max="63"
-                         rv-enabled="m.max_q.enabled" 
-                         rv-input="m.max_q.value"/></td>
-              <td class="value" rv-text="m.max_q.value"/>
-            </tr>
-          </table>
-        </div>
+          <div class="body">
+            <table role="presentation">
+              <tr rv-inside="ui.in.cq_level">
+                <td></td>
+                <td>Main Quantizer</td>
+                <td><input id="cq-level" type="range"
+                           min="0" max="63"
+                           rv-input="m.cq_level"
+                           rv-enabled="m.usage | in cq q"/></td>
+                <td class="value" rv-text="m.cq_level"/>
+              </tr>
+              <tr rv-inside="ui.in.min_q">
+                <td><input id="enable-min-q" type="checkbox" rv-checked="m.min_q.enabled"/></td>
+                <td><label for="enable-min-q">Min Quantizer</label></td>
+                <td><input id="min-q" type="range"
+                           min="0" max="63"
+                           rv-enabled="m.min_q.enabled"
+                           rv-input="m.min_q.value"/></td>
+                <td class="value" rv-text="m.min_q.value"/>
+              </tr>
+              <tr rv-inside="ui.in.max_q">
+                <td><input id="enable-max-q" type="checkbox" rv-checked="m.max_q.enabled"/></td>
+                <td><label for="enable-max-q">Max Quantizer</label></td>
+                <td><input id="max-q" type="range"
+                           min="0" max="63"
+                           rv-enabled="m.max_q.enabled"
+                           rv-input="m.max_q.value"/></td>
+                <td class="value" rv-text="m.max_q.value"/>
+              </tr>
+            </table>
 
-        <div class="section">
-          <div class="title">Adaptive Quantization</div>
-          <div class="body" rv-inside="ui.in.aq">
-            <label><input type="radio" name="aq" value="0" rv-checked="m.aq"/>Off</label><br/>
-            <label><input type="radio" name="aq" value="1" rv-checked="m.aq"/>Variance</label><br/>
-            <label><input type="radio" name="aq" value="2" rv-checked="m.aq"/>Complexity</label><br/>
-            <label><input type="radio" name="aq" value="3" rv-checked="m.aq"/>Cyclic refresh</label>
+            <div class="subsection">
+              <div class="title">Adaptive</div>
+              <div class="body" rv-inside="ui.in.aq">
+                <label><input type="radio" name="aq" value="0" rv-checked="m.aq"/>Off</label><br/>
+                <label><input type="radio" name="aq" value="1" rv-checked="m.aq"/>Variance</label><br/>
+                <label><input type="radio" name="aq" value="2" rv-checked="m.aq"/>Complexity</label><br/>
+                <label><input type="radio" name="aq" value="3" rv-checked="m.aq"/>Cyclic refresh</label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -364,7 +391,7 @@
               <table class="body">
                 <tr rv-inside="ui.in.arf.nr.frames">
                   <td>Frames</td>
-                  <td><input type="range"
+                  <td><input id="arf-nr-frames" type="range"
                              min="0" max="15"
                              rv-enabled="m.arf.enabled"
                              rv-input="m.arf.nr.frames"/></td>
@@ -372,7 +399,7 @@
                 </tr>
                 <tr rv-inside="ui.in.arf.nr.strength">
                   <td>Strength</td>
-                  <td><input type="range"
+                  <td><input id="arf-nr-strength" type="range"
                              min="0" max="6"
                              rv-enabled="m.arf.enabled"
                              rv-input="m.arf.nr.strength"/></td>
@@ -416,16 +443,16 @@
               <tr rv-inside="ui.in.input.skip">
                 <td><input id="enable-skip" type="checkbox" rv-checked="m.input.skip.enabled"/></td>
                 <td><label for="enable-skip">Skip</label></td>
-                <td><input type="text" 
-                           rv-input="m.input.skip.value" 
+                <td><input type="text"
+                           rv-input="m.input.skip.value"
                            rv-enabled="m.input.skip.enabled"/>&nbsp;frames</td>
               </tr>
 
               <tr rv-inside="ui.in.input.limit">
                 <td><input id="enable-limit" type="checkbox" rv-checked="m.input.limit.enabled"/></td>
                 <td><label for="enable-limit">Limit</label></td>
-                <td><input type="text" 
-                           rv-input="m.input.limit.value" 
+                <td><input type="text"
+                           rv-input="m.input.limit.value"
                            rv-enabled="m.input.limit.enabled"/>&nbsp;frames</td>
               </tr>
               <tr rv-inside="ui.in.fps">
@@ -484,7 +511,9 @@
               <div class="body" rv-inside="ui.in.input.src">
                 <label><input type="radio" name="input-type" value="file"
                               rv-checked="m.input.type"/>File</label>
-                  <input type="text" rv-input="m.input.name"/><br/>
+                  <input type="text"
+                         rv-enabled="m.input.type | eq file"
+                         rv-input="m.input.name"/>.<span rv-text="m.input.format | extension"></span><br/>
                 <label><input type="radio" name="input-type" value="stdin"
                               rv-checked="m.input.type"/>STDIN</label><br/>
               </div>
@@ -513,7 +542,9 @@
               <div class="body" rv-inside="ui.in.output_dst">
                 <label><input type="radio" name="output-type" value="file"
                               rv-checked="m.output.type"/>File</label>
-                  <input type="text" rv-input="m.output.name"/><br/>
+                  <input type="text"
+                         rv-enabled="m.output.type | eq file"
+                         rv-input="m.output.name"/>.<span rv-text="m.output.format"></span><br/>
                 <label><input type="radio" name="output-type" value="stdout"
                               rv-checked="m.output.type"/>STDOUT</label>
               </div>
@@ -533,7 +564,7 @@
           <div class="title">User Presets</div>
           <div class="body" id="presets">
             <div rv-each-preset="presets">
-              <a class="preset">{preset.name}</a>
+              <a class="preset" rv-text="preset.name"></a>
               <button class="preset-remove">X</button>
             </div>
             <button id="preset-add">Add Preset</button>
@@ -590,10 +621,10 @@
           fps: false
         },
         cycle: {
-          passes: getParamCycle('passes', [1, 2]),
-          usage: getParamCycle('usage', ['vbr', 'cbr', 'cq', 'q']),
+          passes:  getParamCycle('passes', [1, 2]),
+          usage:   getParamCycle('usage', ['vbr', 'cbr', 'cq', 'q']),
           quality: getParamCycle('quality', ['rt', 'good', 'best']),
-          speed: getParamCycle('speed', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+          speed:   getParamCycle('speed', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
         }
       };
 
@@ -644,6 +675,10 @@
         return presets ? presets : [];
       }
 
+      function deepCopy(m) {
+        return $.extend(true, {}, m);
+      }
+
       function generatePresetName(m) {
         name = '';
         name += m.passes == 1 ? 'one-pass' : 'two-pass';
@@ -662,8 +697,7 @@
       }
 
       var presets = loadPresets();
-
-      var defaultPreset = $.extend(true, {}, m);
+      var defaultPreset = deepCopy(m);
 
       $('#preset-default').on('click', function() {
         $.extend(true, m, defaultPreset);
@@ -684,8 +718,8 @@
       $('#preset-add').on('click', function() {
         var name = prompt("Preset Name", generatePresetName(m));
         if (name) {
-          presets.push({name:name, value:$.extend(true, {}, m)});
-          savePresets(presets);  
+          presets.push({name:name, value:deepCopy(m)});
+          savePresets(presets);
         }
       });
 
