@@ -87,10 +87,14 @@
       }
 
       #width, #height {
-        width: 40px;
+        width: 35px;
       }
 
       #fps-num, #fps-den {
+        width: 35px;
+      }
+
+      #undershoot-pct, #overshoot-pct {
         width: 30px;
       }
 
@@ -706,8 +710,11 @@
 
       $('#presets').on('click', '.preset-remove', function() {
         var index = $(this).parent().index();
-        presets.splice(index, 1);
-        savePresets(presets);
+        var name = presets[index].name;
+        if (confirm('Delete "' + name + '" preset?')) {
+          presets.splice(index, 1);
+          savePresets(presets);
+        }
       });
 
       $('#preset-add').on('click', function() {
