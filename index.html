@@ -24,6 +24,10 @@
         margin-left:40px;
       }
 
+      .disabled {
+          color: #999;
+      }
+
       section {
         margin-bottom: 5px;
         margin-left: 10px;
@@ -256,7 +260,7 @@
             <div rv-inside="ui.in.speed">
               <input id="speed" type="range" min="0" max="10" 
                      rv-input="m.speed" rv-enabled="m.quality | in rt good"/>
-              <span class="value" rv-text="m.speed"></span>
+              <span rv-class-disabled="m.quality | in best" rv-text="m.speed" class="value"></span>
             </div>
           </div>
         </section>
@@ -275,9 +279,12 @@
               <td><input id="enable-undershoot-pct" type="checkbox"
                          rv-checked="m.undershoot_pct.enabled"/></td>
               <td><label for="enable-undershoot-pct">Undershoot</label></td>
-              <td><input id="undershoot-pct" type="text"
-                         rv-input="m.undershoot_pct.value"
-                         rv-enabled="m.undershoot_pct.enabled"/>&nbsp;%</td>
+              <td>
+                <input id="undershoot-pct" type="text"
+                       rv-input="m.undershoot_pct.value"
+                       rv-enabled="m.undershoot_pct.enabled"/>
+                <span rv-class-disabled="m.undershoot_pct.enabled | not">%</span>
+              </td>
             </tr>
             <tr rv-inside="ui.in.overshoot_pct">
               <td><input id="enable-overshoot-pct" type="checkbox"
@@ -285,7 +292,9 @@
               <td><label for="enable-overshoot-pct">Overshoot</label></td>
               <td><input id="overshoot-pct" type="text"
                          rv-input="m.overshoot_pct.value"
-                         rv-enabled="m.overshoot_pct.value"/>&nbsp;%</td>
+                         rv-enabled="m.overshoot_pct.enabled"/>&nbsp;
+                   <span rv-class-disabled="m.overshoot_pct.enabled | not">%</span>
+              </td>
             </tr>
           </table>
         </section>
@@ -310,7 +319,9 @@
                            min="0" max="63"
                            rv-enabled="m.min_q.enabled"
                            rv-input="m.min_q.value"/></td>
-                <td class="value" rv-text="m.min_q.value"/>
+                <td rv-class-disabled="m.min_q.enabled | not"
+                    rv-text="m.min_q.value"
+                    class="value"/>
               </tr>
               <tr rv-inside="ui.in.max_q">
                 <td><input id="enable-max-q" type="checkbox" rv-checked="m.max_q.enabled"/></td>
@@ -319,7 +330,8 @@
                            min="0" max="63"
                            rv-enabled="m.max_q.enabled"
                            rv-input="m.max_q.value"/></td>
-                <td class="value" rv-text="m.max_q.value"/>
+                <td rv-class-disabled="m.max_q.enabled | not"
+                    rv-text="m.max_q.value" class="value"/>
               </tr>
             </table>
 
@@ -343,7 +355,8 @@
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">4</option>
-              </select> &times;
+              </select>
+              <span rv-class-disabled="m.tiles.enabled | not">&times;</span>
               <select rv-value="m.tiles.cols" rv-enabled="m.tiles.enabled">
                 <option value="0">1</option>
                 <option value="1">2</option>
@@ -457,8 +470,11 @@
               <tr rv-inside="ui.in.fps">
                 <td><input id="enable-fps" type="checkbox" rv-checked="m.fps.enabled"/></td>
                 <td><label for="enable-fps">FPS</label></td>
-                <td><input id="fps-num" type="text" rv-enabled="m.fps.enabled" rv-input="m.fps.num"/> /
-                    <input id="fps-den" type="text" rv-enabled="m.fps.enabled" rv-input="m.fps.den"/></td>
+                <td>
+                  <input id="fps-num" type="text" rv-enabled="m.fps.enabled" rv-input="m.fps.num"/>
+                  <span rv-class-disabled="m.fps.enabled | not">/</span>
+                  <input id="fps-den" type="text" rv-enabled="m.fps.enabled" rv-input="m.fps.den"/>
+                </td>
               </tr>
             </table>
 
@@ -494,7 +510,8 @@
                        rv-inside="ui.in.input.size">
                     <input id="width" type="text"
                            rv-input="m.input.width"
-                           rv-enabled="m.input.format | in i420 i422 i444 yv12"/> &times;
+                           rv-enabled="m.input.format | in i420 i422 i444 yv12"/>
+                    <span rv-class-disabled="m.input.format | in y4m">&times;</span>
                     <input id="height" type="text"
                            rv-input="m.input.height"
                            rv-enabled="m.input.format | in i420 i422 i444 yv12"/>
@@ -512,7 +529,10 @@
                               rv-checked="m.input.type"/>File</label>
                   <input type="text"
                          rv-enabled="m.input.type | eq file"
-                         rv-input="m.input.name"/>.<span rv-text="m.input.format | extension"></span><br/>
+                         rv-input="m.input.name"/>
+                  <span rv-class-disabled="m.input.type | eq file | not">
+                    .<span rv-text="m.input.format | extension"></span><br/>
+                  </span>
                 <label><input type="radio" name="input-type" value="stdin"
                               rv-checked="m.input.type"/>STDIN</label><br/>
               </div>
@@ -543,7 +563,10 @@
                               rv-checked="m.output.type"/>File</label>
                   <input type="text"
                          rv-enabled="m.output.type | eq file"
-                         rv-input="m.output.name"/>.<span rv-text="m.output.format"></span><br/>
+                         rv-input="m.output.name"/>
+                  <span rv-class-disabled="m.output.type | eq file | not">
+                    .<span rv-text="m.output.format"></span>
+                  </span><br/>
                 <label><input type="radio" name="output-type" value="stdout"
                               rv-checked="m.output.type"/>STDOUT</label>
               </div>
@@ -770,6 +793,10 @@
       rivets.formatters.bool = function(value){
         return value ? 1 : 0;
       }
+
+      rivets.formatters.not = function (value, args) {
+        return !value;
+      };
 
       rivets.formatters.eq = function (value, args) {
         return value === args;
