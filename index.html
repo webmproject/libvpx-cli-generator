@@ -171,6 +171,10 @@
              rv-on-click="ui.cycle.sharpness"
              rv-show="m.sharpness.enabled"
              data-control-id="sharpness">--sharpness={m.sharpness.value}</p>
+          <p rv-class-selected="ui.in.motion_threshold"
+             rv-inside="ui.in.motion_threshold"
+             rv-show="m.motion_threshold.enabled"
+             data-control-id="motion-threshold">--static-thresh={m.motion_threshold.value}</p>
           <p rv-class-selected="ui.in.kf_max_dist"
              rv-inside="ui.in.kf_max_dist"
              rv-show="m.kf_max_dist.enabled">--kf-max-dist={m.kf_max_dist.value}</p>
@@ -455,6 +459,12 @@
                      rv-input="m.sharpness.value">
                 <span rv-class-disabled="m.sharpness.enabled | not" class="value" rv-text="m.sharpness.value"></span>
             </div>
+            <div rv-inside="ui.in.motion_threshold">
+              <label><input type="checkbox" rv-checked="m.motion_threshold.enabled"/>Motion static threshold</label>
+              <input id="motion-threshold" type="text"
+                     rv-enabled="m.motion_threshold.enabled"
+                     rv-input="m.motion_threshold.value">
+            </div>
           </div>
         </section>
       </div>
@@ -655,7 +665,8 @@
           output: {format: false,
                    dst: false},
           fps: false,
-          sharpness: false
+          sharpness: false,
+          motion_threshold: false
         },
         cycle: {
           passes:    getParamCycle('passes', [1, 2]),
@@ -700,7 +711,8 @@
                max_q: {value: 63, enabled: false},
                lag_in_frames: {value: 25, enabled: false},
                fps: {num:30, den:1, enabled:false},
-               sharpness: {value: 0, enabled: false}
+               sharpness: {value: 0, enabled: false},
+               motion_threshold : {value: 0, enabled: false},
              };
 
       function savePresets(presets) {
