@@ -166,6 +166,11 @@
           <p rv-class-selected="ui.in.kf_min_dist"
              rv-inside="ui.in.kf_min_dist"
              rv-show="m.kf_min_dist.enabled">--kf-min-dist={m.kf_min_dist.value}</p>
+          <p rv-class-selected="ui.in.sharpness"
+             rv-inside="ui.in.sharpness"
+             rv-on-click="ui.cycle.sharpness"
+             rv-show="m.sharpness.enabled"
+             data-control-id="sharpness">--sharpness={m.sharpness.value}</p>
           <p rv-class-selected="ui.in.kf_max_dist"
              rv-inside="ui.in.kf_max_dist"
              rv-show="m.kf_max_dist.enabled">--kf-max-dist={m.kf_max_dist.value}</p>
@@ -443,6 +448,13 @@
               <label><input type="checkbox" rv-checked="m.lag_in_frames.enabled"/>Lag-in</label>
               <input type="text" rv-enabled="m.lag_in_frames.enabled" rv-input="m.lag_in_frames.value"/> frames
             </div>
+            <div rv-inside="ui.in.sharpness">
+              <label><input type="checkbox" rv-checked="m.sharpness.enabled"/>Sharpness</label>
+              <input id="sharpness" type="range" min="0" max="7"
+                     rv-enabled="m.sharpness.enabled"
+                     rv-input="m.sharpness.value">
+                <span rv-class-disabled="m.sharpness.enabled | not" class="value" rv-text="m.sharpness.value"></span>
+            </div>
           </div>
         </section>
       </div>
@@ -605,7 +617,9 @@
       function getParamCycle(param, values) {
         return function(event, models) {
           var model = models.m;
-          model[param] = values[($.inArray(model[param], values) + 1) % values.length];
+          var oldval = eval('model.' + param)
+          var newval = values[($.inArray(oldval, values) + 1) % values.length];
+          eval('model.' + param + ' = ' + newval);
         };
       }
 
@@ -640,13 +654,15 @@
                   src: false},
           output: {format: false,
                    dst: false},
-          fps: false
+          fps: false,
+          sharpness: false
         },
         cycle: {
-          passes:  getParamCycle('passes', [1, 2]),
-          usage:   getParamCycle('usage', ['vbr', 'cbr', 'cq', 'q']),
-          quality: getParamCycle('quality', ['rt', 'good', 'best']),
-          speed:   getParamCycle('speed', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+          passes:    getParamCycle('passes', [1, 2]),
+          usage:     getParamCycle('usage', ['vbr', 'cbr', 'cq', 'q']),
+          quality:   getParamCycle('quality', ['rt', 'good', 'best']),
+          speed:     getParamCycle('speed', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+          sharpness: getParamCycle('sharpness.value', [0, 1, 2, 3, 4, 5, 6, 7]),
         }
       };
 
@@ -684,6 +700,7 @@
                max_q: {value: 63, enabled: false},
                lag_in_frames: {value: 25, enabled: false},
                fps: {num:30, den:1, enabled:false},
+               sharpness: {value: 0, enabled: false}
              };
 
       function savePresets(presets) {
