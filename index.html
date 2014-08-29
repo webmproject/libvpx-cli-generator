@@ -98,8 +98,12 @@
         width: 35px;
       }
 
-      #undershoot-pct, #overshoot-pct {
+      #undershoot-pct, #overshoot-pct, #bias-pct {
         width: 30px;
+      }
+
+      #minsection-pct, #maxsection-pct {
+        width: 60px;
       }
 
       .preset {
@@ -151,6 +155,18 @@
              rv-inside="ui.in.overshoot_pct"
              rv-show="m.overshoot_pct.enabled"
              data-control-id="overshoot-pct">--overshoot-pct={m.overshoot_pct.value}</p>
+          <p rv-class-selected="ui.in.bias_pct"
+             rv-inside="ui.in.bias_pct"
+             rv-show="m.bias_pct.enabled"
+             data-control-id="bias-pct">--bias-pct={m.bias_pct.value}</p>
+          <p rv-class-selected="ui.in.minsection_pct"
+             rv-inside="ui.in.minsection_pct"
+             rv-show="m.minsection_pct.enabled"
+             data-control-id="minsection-pct">--minsection-pct={m.minsection_pct.value}</p>
+          <p rv-class-selected="ui.in.maxsection_pct"
+             rv-inside="ui.in.maxsection_pct"
+             rv-show="m.maxsection_pct.enabled"
+             data-control-id="maxsection-pct">--maxsection-pct={m.maxsection_pct.value}</p>
           <p rv-class-selected="ui.in.cq_level"
              rv-inside="ui.in.cq_level"
              rv-show="m.usage | eq cq q"
@@ -301,10 +317,41 @@
               <td><label for="enable-overshoot-pct">Overshoot</label></td>
               <td><input id="overshoot-pct" type="text"
                          rv-input="m.overshoot_pct.value"
-                         rv-enabled="m.overshoot_pct.enabled"/>&nbsp;
+                         rv-enabled="m.overshoot_pct.enabled"/>
                    <span rv-class-disabled="m.overshoot_pct.enabled | not">%</span>
               </td>
             </tr>
+            <tr rv-inside="ui.in.bias_pct">
+              <td><input id="enable-bias-pct" type="checkbox"
+                         rv-checked="m.bias_pct.enabled"/></td>
+              <td><label for="enable-bias-pct">Bias</label></td>
+              <td><input id="bias-pct" type="text"
+                         rv-input="m.bias_pct.value"
+                         rv-enabled="m.bias_pct.enabled"/>
+                  <span rv-class-disabled="m.bias_pct.enabled | not">%</span>
+              </td>
+            </tr>
+            <tr rv-inside="ui.in.minsection_pct">
+              <td><input id="enable-minsection-pct" type="checkbox"
+                         rv-checked="m.minsection_pct.enabled"/></td>
+              <td><label for="enable-minsection-pct">Minsection</label></td>
+              <td><input id="minsection-pct" type="text"
+                         rv-input="m.minsection_pct.value"
+                         rv-enabled="m.minsection_pct.enabled"/>
+                  <span rv-class-disabled="m.minsection_pct.enabled | not">%</span>
+              </td>
+            </tr>
+            <tr rv-inside="ui.in.maxsection_pct">
+              <td><input id="enable-maxsection-pct" type="checkbox"
+                         rv-checked="m.maxsection_pct.enabled"/></td>
+              <td><label for="enable-maxsection-pct">Maxsection</label></td>
+              <td><input id="maxsection-pct" type="text"
+                         rv-input="m.maxsection_pct.value"
+                         rv-enabled="m.maxsection_pct.enabled"/>
+                  <span rv-class-disabled="m.maxsection_pct.enabled | not">%</span>
+              </td>
+            </tr>
+
           </table>
         </section>
 
@@ -640,6 +687,9 @@
           bitrate: false,
           undershoot_pct: false,
           overshoot_pct: false,
+          bias_pct: false,
+          minsection_pct: false,
+          maxsection_pct: false,
           cq_level: false,
           quality: false,
           speed: false,
@@ -700,6 +750,9 @@
                bitrate: 600,  // > 0
                undershoot_pct: {value: 10, enabled: false},
                overshoot_pct: {value: 10, enabled: false},
+               bias_pct: {value:50, enabled: false},
+               minsection_pct: {value: 5, enabled: false},
+               maxsection_pct: {value: 2000, enabled: false},
                cq_level: 10,         // 0, 1, 2, ..., 63
                aq: 0,                // 0, 1, 2, 3
                tiles: {rows: 0, cols:0, enabled: false},
