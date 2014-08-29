@@ -141,7 +141,7 @@
              rv-on-click="ui.cycle.usage">--end-usage={m.usage}</p>
           <p rv-class-selected="ui.in.bitrate"
              rv-inside="ui.in.bitrate"
-             rv-show="m.usage | in vbr cbr cq"
+             rv-show="m.usage | eq vbr cbr cq"
              data-control-id="bitrate">--target-bitrate={m.bitrate}</p>
           <p rv-class-selected="ui.in.undershoot_pct"
              rv-inside="ui.in.undershoot_pct"
@@ -153,14 +153,14 @@
              data-control-id="overshoot-pct">--overshoot-pct={m.overshoot_pct.value}</p>
           <p rv-class-selected="ui.in.cq_level"
              rv-inside="ui.in.cq_level"
-             rv-show="m.usage | in cq q"
+             rv-show="m.usage | eq cq q"
              data-control-id="cq-level">--cq-level={m.cq_level}</p>
           <p rv-class-selected="ui.in.quality"
              rv-inside="ui.in.quality"
              rv-on-click="ui.cycle.quality">--{m.quality}</p>
           <p rv-class-selected="ui.in.speed"
              rv-inside="ui.in.speed"
-             rv-show="m.quality | in rt good"
+             rv-show="m.quality | eq rt good"
              rv-on-click="ui.cycle.speed"
              data-control-id="speed">--cpu-used={m.speed}</p>
           <p rv-class-selected="ui.in.kf_min_dist"
@@ -201,7 +201,7 @@
              rv-show="m.tiles.enabled">--tile-rows={m.tiles.rows} --tile-cols={m.tiles.cols}</p>
           <p rv-class-selected="ui.in.aq"
              rv-inside="ui.in.aq"
-             rv-show="m.aq | in 1 2 3">--aq-mode={m.aq}</p>
+             rv-show="m.aq | eq 1 2 3">--aq-mode={m.aq}</p>
           <p rv-class-selected="ui.in.input.skip"
              rv-inside="ui.in.input.skip"
              rv-show="m.input.skip.enabled">--skip={m.input.skip.value}</p>
@@ -213,10 +213,10 @@
              rv-show="m.fps.enabled">--fps={m.fps.num}/{m.fps.den}</p>
           <p rv-class-selected="ui.in.input.format"
              rv-inside="ui.in.input.format"
-             rv-show="m.input.format | in i420 i422 i444 yv12">--{m.input.format}</p>
+             rv-show="m.input.format | eq i420 i422 i444 yv12">--{m.input.format}</p>
           <p rv-class-selected="ui.in.input.size"
              rv-inside="ui.in.input.size"
-             rv-show="m.input.format | in i420 i422 i444 yv12">--width={m.input.width} --height={m.input.height}</p>
+             rv-show="m.input.format | eq i420 i422 i444 yv12">--width={m.input.width} --height={m.input.height}</p>
           <p rv-class-selected="ui.in.input.src"
              rv-inside="ui.in.input.src"
              rv-show="m.input.type | eq file">{m.input.name}.{m.input.format | extension}</p>
@@ -268,8 +268,8 @@
             </div>
             <div rv-inside="ui.in.speed">
               <input id="speed" type="range" min="0" max="10" 
-                     rv-input="m.speed" rv-enabled="m.quality | in rt good"/>
-              <span rv-class-disabled="m.quality | in best" rv-text="m.speed" class="value"></span>
+                     rv-input="m.speed" rv-enabled="m.quality | eq rt good"/>
+              <span rv-class-disabled="m.quality | eq best" rv-text="m.speed" class="value"></span>
             </div>
           </div>
         </section>
@@ -282,7 +282,7 @@
               <td>Bitrate</td>
               <td><input id="bitrate" type="text"
                          rv-input="m.bitrate"
-                         rv-enabled="m.usage | in vbr cbr cq"/>&nbsp;kbps</td>
+                         rv-enabled="m.usage | eq vbr cbr cq"/>&nbsp;kbps</td>
             </tr>
             <tr rv-inside="ui.in.undershoot_pct">
               <td><input id="enable-undershoot-pct" type="checkbox"
@@ -318,7 +318,7 @@
                 <td><input id="cq-level" type="range"
                            min="0" max="63"
                            rv-input="m.cq_level"
-                           rv-enabled="m.usage | in cq q"/></td>
+                           rv-enabled="m.usage | eq cq q"/></td>
                 <td class="value" rv-text="m.cq_level"/>
               </tr>
               <tr rv-inside="ui.in.min_q">
@@ -532,11 +532,11 @@
                        rv-inside="ui.in.input.size">
                     <input id="width" type="text"
                            rv-input="m.input.width"
-                           rv-enabled="m.input.format | in i420 i422 i444 yv12"/>
-                    <span rv-class-disabled="m.input.format | in y4m">&times;</span>
+                           rv-enabled="m.input.format | eq i420 i422 i444 yv12"/>
+                    <span rv-class-disabled="m.input.format | eq y4m">&times;</span>
                     <input id="height" type="text"
                            rv-input="m.input.height"
-                           rv-enabled="m.input.format | in i420 i422 i444 yv12"/>
+                           rv-enabled="m.input.format | eq i420 i422 i444 yv12"/>
                   </div>
 
                   <div style="clear:both"></div>
@@ -829,10 +829,6 @@
 
       rivets.formatters.eq = function (value, args) {
         return value === args;
-      };
-
-      rivets.formatters.in = function (value, args) {
-        return $.inArray(value, arguments, 1) !== -1;
       };
 
       var view = rivets.bind($('#panel'), {
