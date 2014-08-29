@@ -24,30 +24,25 @@
         margin-left:40px;
       }
 
-      .section {
+      section {
         margin-bottom: 5px;
         margin-left: 10px;
       }
 
-      .section > .title {
+      section > h1 {
+        font-size: 14pt;
+        margin-bottom: 5px;
         font-family: arial;
         font-weight: bold;
       }
 
-      .section > .body {
-        margin-left: 10px;
-      }
-
-
-      .subsection {
+      section > h2 {
+        font-size: 12pt;
         margin-bottom: 5px;
+        font-family: arial;
       }
 
-      .subsection > .title {
-
-      }
-
-      .subsection > .body {
+      section > .body {
         margin-left: 10px;
       }
 
@@ -224,16 +219,16 @@
       </div>
 
       <div class="column">
-        <div class="section">
-          <div class="title">Passes</div>
+        <section>
+          <h1>Passes</h1>
           <div class="body" rv-inside="ui.in.passes">
             <label><input type="radio" name="passes" value="1" rv-checked="m.passes"/>One</label>
             <label><input type="radio" name="passes" value="2" rv-checked="m.passes"/>Two</label>
           </div>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Usage</div>
+        <section>
+          <h1>Usage</h1>
           <div class="body" rv-inside="ui.in.usage">
             <label><input type="radio" name="usage" value="vbr"
                           rv-checked="m.usage"/>VBR (Variable Bitrate)</label><br/>
@@ -244,10 +239,10 @@
             <label><input type="radio" name="usage" value="q"
                           rv-checked="m.usage"/>Q (Constant Quality)</label>
           </div>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Speed</div>
+        <section>
+          <h1>Speed</h1>
           <div class="body">
             <div rv-inside="ui.in.quality">
               <label><input type="radio" name="quality" value="rt" rv-checked="m.quality"/>Real Time</label>
@@ -260,10 +255,10 @@
               <span class="value" rv-text="m.speed"></span>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Rate Control</div>
+        <section>
+          <h1>Rate Control</h1>
           <table class="body" role="presentation">
             <tr rv-inside="ui.in.bitrate">
               <td></td>
@@ -289,10 +284,10 @@
                          rv-enabled="m.overshoot_pct.value"/>&nbsp;%</td>
             </tr>
           </table>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Quantization</div>
+        <section>
+          <h1>Quantization</h1>
           <div class="body">
             <table role="presentation">
               <tr rv-inside="ui.in.cq_level">
@@ -324,20 +319,20 @@
               </tr>
             </table>
 
-            <div class="subsection">
-              <div class="title">Adaptive</div>
+            <section>
+              <h2>Adaptive</h2>
               <div class="body" rv-inside="ui.in.aq">
                 <label><input type="radio" name="aq" value="0" rv-checked="m.aq"/>Off</label><br/>
                 <label><input type="radio" name="aq" value="1" rv-checked="m.aq"/>Variance</label><br/>
                 <label><input type="radio" name="aq" value="2" rv-checked="m.aq"/>Complexity</label><br/>
                 <label><input type="radio" name="aq" value="3" rv-checked="m.aq"/>Cyclic refresh</label>
               </div>
-            </div>
+            </section>
           </div>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Tiles</div>
+        <section>
+          <h1>Tiles</h1>
           <div class="body" rv-inside="ui.in.tiles">
             <label><input type="checkbox" rv-checked="m.tiles.enabled"/>Enable</label>
               <select rv-value="m.tiles.rows" rv-enabled="m.tiles.enabled">
@@ -355,13 +350,13 @@
                 <option value="6">64</option>
               </select>
           </div> 
-        </div>
+        </section>
 
       </div>
 
       <div class="column">
-        <div class="section">
-          <div class="title">Key Frames</div>
+        <section>
+          <h1>Key Frames</h1>
           <table role="presenetation" class="body">
             <tr rv-inside="ui.in.kf_min_dist">
               <td><input id="enable-min-distance" type="checkbox" rv-checked="m.kf_min_dist.enabled"/></td>
@@ -378,16 +373,16 @@
                          rv-input="m.kf_max_dist.value"/>&nbsp;frames</td>
             </tr>
           </table>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Alt Reference Frames</div>
+        <section>
+          <h1>Alt Reference Frames</h1>
           <div class="body">
             <div rv-inside="ui.in.arf.enabled">
               <label><input type="checkbox" rv-checked="m.arf.enabled"/>Enable</label>
             </div>
-            <div class="subsection">
-              <div class="title">Temporal Noise Reduction</div>
+            <section>
+              <h2>Temporal Noise Reduction</h2>
               <table class="body">
                 <tr rv-inside="ui.in.arf.nr.frames">
                   <td>Frames</td>
@@ -406,11 +401,11 @@
                   <td class="value" rv-text="m.arf.nr.strength"/>
                 </tr>
               </table>
-            </div>
+            </section>
           </div>
-        </div>
-        <div class="section">
-          <div class="title">Miscellaneous</div>
+        </section>
+        <section>
+          <h1>Miscellaneous</h1>
           <div class="body">
             <label rv-inside="ui.in.debug">
               <input type="checkbox" rv-checked="m.debug"/>Debug mode
@@ -432,12 +427,12 @@
               <input type="text" rv-enabled="m.lag_in_frames.enabled" rv-input="m.lag_in_frames.value"/> frames
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       <div class="column">
-        <div class="section">
-          <div class="title">Input</div>
+        <section>
+          <h1>Input</h1>
           <div class="body">
             <table role="presentation">
               <tr rv-inside="ui.in.input.skip">
@@ -463,8 +458,8 @@
               </tr>
             </table>
 
-            <div class="subsection">
-              <div class="title">Format</div>
+            <section>
+              <h2>Format</h2>
               <div class="body">
                 <label><input type="radio"
                               name="input-format"
@@ -504,10 +499,10 @@
                   <div style="clear:both"></div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div class="subsection">
-              <div class="title">Source</div>
+            <section>
+              <h2>Source</h2>
               <div class="body" rv-inside="ui.in.input.src">
                 <label><input type="radio" name="input-type" value="file"
                               rv-checked="m.input.type"/>File</label>
@@ -517,15 +512,15 @@
                 <label><input type="radio" name="input-type" value="stdin"
                               rv-checked="m.input.type"/>STDIN</label><br/>
               </div>
-            </div>
+            </section>
           </div>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">Output</div>
+        <section>
+          <h1>Output</h1>
           <div class="body">
-            <div class="subsection">
-              <div class="title">Format</div>
+            <section>
+              <h2>Format</h2>
               <div class="body" rv-inside="ui.in.output_format">
                 <label><input type="radio"
                               name="output_format"
@@ -536,9 +531,9 @@
                               value="ivf"
                               rv-checked="m.output.format"/>IVF</label>
               </div>
-            </div>
-            <div class="subsection">
-              <div class="title">Destination</div>
+            </section>
+            <section>
+              <h2>Destination</h2>
               <div class="body" rv-inside="ui.in.output_dst">
                 <label><input type="radio" name="output-type" value="file"
                               rv-checked="m.output.type"/>File</label>
@@ -548,20 +543,20 @@
                 <label><input type="radio" name="output-type" value="stdout"
                               rv-checked="m.output.type"/>STDOUT</label>
               </div>
-            </div>
+            </section>
           </div>
-        </div>
+        </section>
       </div>
       <div class="column">
-        <div class="section">
-          <div class="title">Builtin Presets</div>
+        <section>
+          <h1>Builtin Presets</h1>
           <div class="body">
             <a class="preset" id="preset-default">Default</a>
           </div>
-        </div>
+        </section>
 
-        <div class="section">
-          <div class="title">User Presets</div>
+        <section>
+          <h1>User Presets</h1>
           <div class="body" id="presets">
             <div rv-each-preset="presets">
               <a class="preset" rv-text="preset.name"></a>
@@ -569,7 +564,7 @@
             </div>
             <button id="preset-add">Add Preset</button>
           </div>
-        </div>
+        </section>
       </div>
       
     </div>
