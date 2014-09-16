@@ -284,7 +284,7 @@
             </div>
             <div rv-inside="ui.in.speed">
               <input id="speed" type="range" min="0" max="10" 
-                     rv-input="m.speed" rv-enabled="m.quality | eq rt good"/>
+                     rv-input="m.speed" rv-disabled="m.quality | eq best"/>
               <span rv-class-disabled="m.quality | eq best" rv-text="m.speed" class="value"></span>
             </div>
           </div>
@@ -881,7 +881,7 @@
       };
 
       rivets.formatters.eq = function (value, args) {
-        return value === args;
+        return $.inArray(value, arguments, 1) !== -1;
       };
 
       var view = rivets.bind($('#panel'), {
